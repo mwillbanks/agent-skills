@@ -1,0 +1,60 @@
+{
+  "name": "@mwillbanks/agent-skills",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "private": false,
+  "type": "module",
+  "files": [
+    ".agents/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "prompt": "bun run scripts/prompt.ts",
+    "prepare": "husky",
+    "skills:validate": "bash -lc 'set -euo pipefail; for d in .agents/skills/*; do [ -d \"$d\" ] || continue; bunx skills-ref validate \"$d\"; done'",
+    "release": "GITHUB_TOKEN=$(gh auth token) bunx release-it"
+  },
+  "lint-staged": {
+    "*": [
+      "bunx biome check --write --unsafe --no-errors-on-unmatched --files-ignore-unknown=true"
+    ],
+    ".agents/skills/**": [
+      "bun run skills:validate"
+    ]
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
+    "@release-it/conventional-changelog": "^10.0.6",
+    "@types/bun": "latest",
+    "conventional-changelog-conventionalcommits": "^9.3.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "release-it": "^19.2.4",
+    "skills-ref": "^0.1.5"
+  },
+  "release-it": {
+    "hooks": {
+      "before:init": "bun run skills:validate"
+    },
+    "git": {
+      "commitMessage": "chore: release v${version}",
+      "pushRepo": "origin",
+      "requireBranch": "main",
+      "requireCommits": true
+    },
+    "github": {
+      "release": true
+    },
+    "npm": {
+      "publish": false
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular",
+        "infile": "CHANGELOG.md"
+      }
+    }
+  }
+}
