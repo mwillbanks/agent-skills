@@ -14,6 +14,11 @@ This index is the single place to discover active skills and expected usage patt
 - Purpose: Enforces repository-native tooling, TypeScript correctness, test discipline, and maintainability.
 - Use when: Any code, test, tooling, or infrastructure artifact is modified.
 
+### biome-enforcement
+- Path: `.agents/skills/biome-enforcement/SKILL.md`
+- Purpose: Keeps Biome as the final enforcement routine while guiding config decisions, ignore-path triage, and structured remediation.
+- Use when: Code, tests, Biome config, or generated-output paths change and Biome-aware validation is required.
+
 ### code-discipline
 - Path: `.agents/skills/code-discipline/SKILL.md`
 - Purpose: Prevents helper/wrapper/abstraction bloat and enforces reuse of platform, framework, and existing utilities.
@@ -21,12 +26,13 @@ This index is the single place to discover active skills and expected usage patt
 
 ## Standard Pairing
 
-For most coding tasks, use this skill trio together:
+For most coding tasks, use this baseline set together:
 1. `agent-execution-mode`
 2. `repo-standards-enforcement`
 3. `code-discipline`
+4. `biome-enforcement`
 
-This baseline set prevents partial implementations, enforces standards, and blocks unnecessary abstraction sprawl.
+This baseline set prevents partial implementations, enforces standards, preserves Biome enforcement discipline, and blocks unnecessary abstraction sprawl.
 
 ## Mode Defaults
 
@@ -43,5 +49,6 @@ Before claiming completion, ensure:
 - Requested scope is fully implemented.
 - No placeholders, TODOs, or fake completion remain in required paths.
 - Type checking and tests were run.
+- Biome enforcement was run when the changed scope is Biome-managed.
 - Documentation is updated when behavior or architecture changed.
 - Reported status matches reality.

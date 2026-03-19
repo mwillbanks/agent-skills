@@ -29,7 +29,7 @@ Priority order:
 
 Examples:
 
-- `biome-final-validation` owns Biome execution, remediation flow, and post-Biome validation
+- `biome-enforcement` owns Biome execution, remediation flow, config and ignore-path decisions, and post-Biome validation
 - a MUI or design-system implementation skill owns component and design-system execution details
 - a Pulumi-specific infrastructure skill owns infrastructure execution details
 
@@ -435,4 +435,3 @@ When this skill and a more specific skill both apply:
 
 This skill defines repository-wide standards.
 It should not override a more specific skill that exists specifically to execute a narrower concern more correctly.
-
