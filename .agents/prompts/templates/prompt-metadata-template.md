@@ -1,7 +1,7 @@
 ---
 name: <prompt-name>
 category: <implementation|review|debugging|documentation|architecture|repo-operations|research>
-mode: <production|hardening|agentic-self-review|recommendation-review|general-review|prototype|design-only|architecture>
+mode: <production|hardening|agentic-self-review|general-review|pr-review|prototype|design|architecture>
 intent: <one-sentence objective>
 required_skills:
   - agent-execution-mode

@@ -26,13 +26,13 @@ This index is the single place to discover active skills and expected usage patt
 
 ## Standard Pairing
 
-For most coding tasks, use this baseline set together:
+For most coding tasks, use this standard set together:
 1. `agent-execution-mode`
 2. `repo-standards-enforcement`
 3. `code-discipline`
 4. `biome-enforcement`
 
-This baseline set prevents partial implementations, enforces standards, preserves Biome enforcement discipline, and blocks unnecessary abstraction sprawl.
+This standard set prevents partial implementations, enforces standards, preserves Biome enforcement discipline, and blocks unnecessary abstraction sprawl.
 
 ## Mode Defaults
 
@@ -40,8 +40,10 @@ This baseline set prevents partial implementations, enforces standards, preserve
 - Elevated mode: `hardening` when the task is correctness-sensitive or has failed previously.
 - Review modes:
   - `agentic-self-review`
-  - `recommendation-review`
   - `general-review`
+  - `pr-review`
+
+Execution modes `production`, `hardening`, `prototype`, `design`, and `architecture` must run `agentic-self-review` after completion is stated.
 
 ## Quick Validation Checklist
 

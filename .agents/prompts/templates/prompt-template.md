@@ -33,6 +33,7 @@
 - Requested scope complete.
 - Validation commands succeeded (or blocker documented precisely).
 - No obvious regressions in adjacent affected flows.
+- If mode is `production`, `hardening`, `prototype`, `design`, or `architecture`, run `agentic-self-review` after stating completion and fix safe issues before concluding.
 
 ## Final Report Format
 - Scope completed

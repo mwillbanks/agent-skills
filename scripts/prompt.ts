@@ -118,7 +118,7 @@ async function main(): Promise<void> {
     "prompt-name": rawName,
     "implementation|review|debugging|documentation|architecture|repo-operations|research":
       category,
-    "production|hardening|agentic-self-review|recommendation-review|general-review|prototype|design-only|architecture":
+    "production|hardening|agentic-self-review|general-review|pr-review|prototype|design|architecture":
       "production",
     "one-sentence objective": `Implement ${toTitleCase(rawName)} completely and validate outcomes.`,
     "required input 1": "Task scope",
@@ -156,7 +156,7 @@ async function main(): Promise<void> {
       category,
     )
     .replace(
-      "<production|hardening|agentic-self-review|recommendation-review|general-review|prototype|design-only|architecture>",
+      "<production|hardening|agentic-self-review|general-review|pr-review|prototype|design|architecture>",
       "production",
     )
     .replace(

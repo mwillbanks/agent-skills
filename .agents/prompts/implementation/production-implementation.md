@@ -13,7 +13,8 @@ Non-negotiable requirements:
 4. Update tests where appropriate for changed behavior.
 5. Update documentation if behavior, contracts, or architecture changed.
 6. Run validation commands and report exact outcomes.
-7. If blocked, report precise blocker details and impact.
+7. After stating completion, run `agentic-self-review` and fix obvious safe issues before concluding.
+8. If blocked, report precise blocker details and impact.
 
 Output format:
 - Scope completed

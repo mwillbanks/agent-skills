@@ -13,6 +13,7 @@ Requirements:
 4. Implement concrete code, not architecture prose only, when feasible.
 5. Update docs/ADR notes for meaningful architecture changes.
 6. Validate that implementation and architecture remain aligned.
+7. After stating completion, run `agentic-self-review` and fix obvious safe issues before concluding.
 
 Deliver:
 - Decision summary

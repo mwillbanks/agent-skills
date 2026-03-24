@@ -114,9 +114,12 @@ Skills are organized under the `.agents` directory.
 
 ```text
 .agents/
+  prompts/
   skills/
     <skill-name>/
       SKILL.md
+      assets/
+      references/
 ```
 
 Each skill is self‑contained and defines:
@@ -125,6 +128,8 @@ Each skill is self‑contained and defines:
 - what behaviors it enforces
 - what validation expectations exist
 - what failure patterns it prevents
+
+Supporting templates belong in `assets/` and supporting documentation belongs in `references/`.
 
 ---
 
@@ -183,5 +188,6 @@ Recipients must not misrepresent the authorship or origin of this work as their 
 
 This repository uses release-it for versioning and GitHub releases.
 
+- `bun test` validates all skills against the Agent Skills specification.
 - `bun run skills:validate` validates all skills against the Agent Skills specification.
 - `bun run release` runs release-it and creates a GitHub release.

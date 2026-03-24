@@ -11,3 +11,5 @@ Use these prompts when code must be fully implemented, not sketched.
 ## Rule
 
 Choose `production-implementation` by default, escalate to `implementation-hardening` when correctness or prior failure risk is high.
+
+All implementation prompts must run `agentic-self-review` after completion is stated.

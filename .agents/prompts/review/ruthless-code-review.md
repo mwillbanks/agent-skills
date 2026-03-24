@@ -4,7 +4,7 @@ Use this for strict technical review with high signal and zero fluff.
 
 ## Prompt
 
-Run a ruthless review of the requested changes.
+Run a ruthless `general-review` of the requested changes.
 
 Rules:
 1. Prioritize findings over praise.

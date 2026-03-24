@@ -12,7 +12,8 @@ Requirements:
 3. Strengthen state handling, error handling, contracts, and edge-case coverage.
 4. Add or update tests to prevent regressions.
 5. Validate with typecheck + tests + any repo lint/format checks.
-6. Do not claim completion while obvious risks remain.
+6. After stating completion, run `agentic-self-review` and fix obvious safe issues before concluding.
+7. Do not claim completion while obvious risks remain.
 
 Provide:
 - Root cause
