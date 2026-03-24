@@ -1,5 +1,18 @@
 # Changelog
 
+# [1.2.0](https://github.com/mwillbanks/agent-skills/compare/1.1.0...1.2.0) (2026-03-24)
+
+
+### Features
+
+* **agent-execution-mode:** refactor skill, task/review/report tracking, post-completion self-review ([009722a](https://github.com/mwillbanks/agent-skills/commit/009722abb9e5e24e36798ab58b94189a6baa2a98))
+
+
+### BREAKING CHANGES
+
+* **agent-execution-mode:** recommendation-review mode is removed; use general-review or
+pr-review. design-only mode is removed; use design.
+
 # [1.1.0](https://github.com/mwillbanks/agent-skills/compare/1.0.0...1.1.0) (2026-03-19)
 
 
