@@ -1,8 +1,8 @@
 ---
 name: agent-execution-mode
-description: Enforces complete execution, sub-agent orchestration, external self-review gating, validation, and reporting for implementation, architecture, design, and review tasks. Use when work must be complete, verified, and documented instead of approximate or partial.
+description: Enforces complete execution, disciplined sub-agent use, independent self-review gating, validation, and reporting for implementation, architecture, design, and review tasks. Use when work must be complete, verified, and documented instead of approximate or partial.
 license: Apache-2.0
-compatibility: Best with agents that support sub-agents, local repository access, and repo-native validation tooling. Allows an explicit local review fallback when required self-review delegation is unavailable.
+compatibility: Best with agents that support sub-agents, local repository access, and repo-native validation tooling. Approves a dedicated sub-agent by default for mandatory `agentic-self-review` and allows a documented local fallback only when delegated review is unavailable or explicitly blocked.
 metadata:
   author: Mike Willbanks
   repository: https://github.com/mwillbanks/agent-skills
@@ -61,7 +61,7 @@ Mode intent:
 - Do not return a partial implementation as complete work.
 - Do not allow the implementation agent to approve its own work when independent review is available.
 - Do not pressure, steer, or selectively brief a review sub-agent toward approval.
-- Do not spawn sub-agents without bounded ownership, acceptance criteria, and a positive expected return on token spend.
+- Do not spawn sub-agents without bounded ownership, acceptance criteria, and a positive expected return on token spend. The mandatory post-completion `agentic-self-review` reviewer satisfies this gate by policy and is not blocked by discretionary ROI arguments.
 - Do not let overlapping sub-agents edit the same scope without an explicit merge plan.
 - Do not merge sub-agent output without manager review.
 - Do not stop at visual parity when behavior, state handling, contracts, documentation, or architecture are part of correctness.
@@ -79,14 +79,14 @@ Follow this sequence unless the request explicitly narrows scope:
 1. Identify the mode and create or update task, review, and report state when the work is implementation-oriented or substantial.
 2. Gather the minimum context needed to stop guessing, including relevant specs, validation commands, and repository rules.
 3. For orchestration modes, consult [references/SUBAGENT_MANAGEMENT.md](references/SUBAGENT_MANAGEMENT.md) and `.agents/evaluations/management.json` if it exists before spawning helpers.
-4. Resolve whether sub-agents improve delivery. The manager must prefer the smallest viable execution shape. Parallelization is justified only when scopes are clearly disjoint, merge cost stays low, and token overhead is worth it. Partitionability alone does not justify multiple workers.
+4. Resolve whether sub-agents improve delivery. The manager must prefer the smallest viable execution shape for implementation and support delegation. Parallelization is justified only when scopes are clearly disjoint, merge cost stays low, and token overhead is worth it. Partitionability alone does not justify multiple workers. This minimization rule does not suppress the mandatory post-completion `agentic-self-review` reviewer.
 5. Implement or review with repository-native patterns. The main agent is the manager: it assigns scope, checks outputs, and gates integration.
 6. Validate behavior, design, static analysis, tests, and repository-native enforcement using the project workflow.
 7. Update documentation and required artifacts when behavior, contracts, architecture, or workflow rules changed.
 8. State completion only when the implementation or design work is actually complete for the chosen mode.
-9. For `production`, `hardening`, `prototype`, `design`, and `architecture`, immediately run an independent `agentic-self-review` per [references/WORKFLOWS.md](references/WORKFLOWS.md).
+9. For `production`, `hardening`, `prototype`, `design`, and `architecture`, immediately run an independent `agentic-self-review` per [references/WORKFLOWS.md](references/WORKFLOWS.md). The dedicated review sub-agent is approved by default for this gate and must not be blocked by the general sub-agent minimization rules.
 10. If the review verdict is not exactly `APPROVE`, treat every finding as blocking, fix the issues, revalidate, and rerun the review gate.
-11. Finish only after the review gate returns `APPROVE`, or after an explicitly documented local fallback review when delegation was unavailable.
+11. Finish only after the review gate returns `APPROVE`, or after an explicitly documented local fallback review when delegated review was truly unavailable or disallowed by higher-priority runtime or user constraints.
 
 Detailed workflow rules live in [references/WORKFLOWS.md](references/WORKFLOWS.md) and [references/SUBAGENT_MANAGEMENT.md](references/SUBAGENT_MANAGEMENT.md).
 
@@ -96,7 +96,7 @@ Detailed workflow rules live in [references/WORKFLOWS.md](references/WORKFLOWS.m
 - Do not forward full conversation history, full repository summaries, or unrelated file lists when a smaller scoped prompt will do.
 - Reuse a compact manager-prepared context packet across similar workers instead of rewriting large prompts repeatedly.
 - Prefer diffs, file paths, acceptance criteria, and validation commands over long narrative restatements.
-- If delegation overhead exceeds likely delivery gain, do not delegate.
+- If delegation overhead exceeds likely delivery gain, do not delegate. This efficiency rule does not override the mandatory post-completion `agentic-self-review` reviewer.
 - Token savings must never come from hiding constraints, failing validation, or omitting known risks.
 
 ## Alignment gating
@@ -118,6 +118,7 @@ For managed sub-agent work, keep repo-local evaluations under `.agents/evaluatio
 Required behavior:
 
 - prefer the smallest viable execution shape in this order: `no sub-agent`, `read-only scout or evidence-gathering worker`, `single bounded writer`, `parallel bounded writers on disjoint scopes`, `independent reviewer`
+- treat the dedicated `agentic-self-review` reviewer as pre-approved for the mandatory post-completion review gate; do not block it with delegation-overhead heuristics or the smallest-viable-execution preference
 - do not use multiple writing workers when one bounded writer is sufficient
 - prefer read-only discovery workers before write delegation when uncertainty is high
 - parallelization is justified only when the scopes are clearly disjoint and merge cost stays low
@@ -177,7 +178,7 @@ Rules:
 - The markdown body title must be `# REVIEW_ID - REVIEW_NAME`.
 - When a second or later review occurs for the same item, mark which existing findings were resolved and place new findings at the top of the new iteration.
 - `general-review`, `pr-review`, and `agentic-self-review` use the standard in [references/REVIEW_INSTRUCTIONS.md](references/REVIEW_INSTRUCTIONS.md).
-- Post-completion `agentic-self-review` is normally delegated to a separate sub-agent and does not create a markdown artifact unless explicitly requested.
+- Post-completion `agentic-self-review` is normally delegated to a separate sub-agent. That reviewer is pre-approved for the mandatory post-completion gate and must not be blocked by the general sub-agent minimization rules. Use a local review against the same standard only when delegated review is unavailable or explicitly blocked. It does not create a markdown artifact unless explicitly requested.
 - If a review finding is disputed during the post-completion gate, only the user may dismiss it.
 - Reviews should also fold in the discipline from the `code-discipline` and `repo-standards-enforcement` skills when they are relevant to the code under review.
 

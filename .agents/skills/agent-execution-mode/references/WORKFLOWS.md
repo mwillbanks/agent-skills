@@ -195,10 +195,10 @@ Rules:
 
 1. Do the work.
 2. State completion only when the task is actually complete for the chosen mode.
-3. Spawn a dedicated review sub-agent using `agentic-self-review`.
+3. Spawn a dedicated review sub-agent using `agentic-self-review`. This reviewer is approved by default for the mandatory post-completion gate and is not blocked by the general delegation minimization rules.
 4. Provide the smallest sufficient evidence packet: original user prompt, clarified requirements, accepted plan, changed files or diff, validation results, relevant screenshots or artifacts, and applicable repository rules.
 5. Instruct the reviewer to act as the final reviewer and not as a modifier.
-6. If a review sub-agent cannot run, perform a documented local fallback review and record the deviation.
+6. If a review sub-agent cannot run because runtime or user constraints actually prevent it, perform a documented local fallback review and record the exact constraint.
 7. If the verdict is exactly `APPROVE`, the gate passes.
 8. If the verdict is not exactly `APPROVE`, every finding is blocking regardless of severity.
 9. Only the user may dismiss a disputed finding.

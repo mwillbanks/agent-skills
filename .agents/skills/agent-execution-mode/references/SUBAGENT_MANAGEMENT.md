@@ -27,10 +27,11 @@ These modes permit managed sub-agent execution when all of the following are tru
 - the manager can validate outputs before integration
 
 Multi-agent execution is not the default just because partitioning is possible.
-The manager must still prefer the smallest viable execution shape.
+The manager must still prefer the smallest viable execution shape for implementation and support delegation.
 One bounded writer is preferred over parallel writers unless there is a clear delivery advantage with low integration cost.
 Partitionability alone does not justify multiple workers.
 Do not spawn helpers for trivial tasks, single-file edits with no meaningful parallel split, or tightly coupled work where delegation would create more churn than speed.
+These minimization rules do not suppress the mandatory post-completion `agentic-self-review` reviewer.
 
 ## Delegation preference ladder
 
@@ -103,19 +104,20 @@ Rules:
 
 ## Independent self-review gate
 
-Post-completion self-review requires an independent reviewer whenever sub-agent support is available.
+Post-completion self-review requires an independent reviewer by default. The dedicated `agentic-self-review` reviewer is pre-approved and must not be blocked by the general sub-agent minimization rules.
 
 Rules:
 
-1. Spawn a dedicated reviewer using `agentic-self-review`.
-2. Provide the smallest sufficient evidence packet: original prompt, clarified requirements, accepted plan, diff or changed files, validation output, relevant screenshots or artifacts, and repository rules.
-3. Tell the reviewer to act as the final reviewer and not to modify code.
-4. Do not ask the reviewer to approve. Do not bias the verdict.
-5. If the verdict is exactly `APPROVE`, the gate passes.
-6. If the verdict is not exactly `APPROVE`, every finding is blocking.
-7. Only the user may dismiss a disputed finding.
-8. Fix blockers, rerun affected validation, and repeat the review gate.
-9. If sub-agent review cannot run, use a documented local fallback review and record the deviation.
+1. Spawn a dedicated reviewer using `agentic-self-review` for the mandatory post-completion gate.
+2. Do not treat this reviewer as optional because of delegation-overhead heuristics, smallest-viable-execution preference, or conservative anti-parallelism rules.
+3. Provide the smallest sufficient evidence packet: original prompt, clarified requirements, accepted plan, diff or changed files, validation output, relevant screenshots or artifacts, and repository rules.
+4. Tell the reviewer to act as the final reviewer and not to modify code.
+5. Do not ask the reviewer to approve. Do not bias the verdict.
+6. If the verdict is exactly `APPROVE`, the gate passes.
+7. If the verdict is not exactly `APPROVE`, every finding is blocking.
+8. Only the user may dismiss a disputed finding.
+9. Fix blockers, rerun affected validation, and repeat the review gate.
+10. If sub-agent review cannot run because runtime or user constraints actually prevent it, use a documented local fallback review and record the exact constraint.
 
 Reviewer packet rules:
 
