@@ -157,6 +157,21 @@ For `agentic-self-review`, valid verdicts are:
 
 Any finding in `agentic-self-review` means the verdict is `BLOCK`.
 
+### Delegated `agentic-self-review` packet override
+
+When `agentic-self-review` is being performed by a delegated reviewer for the post-completion gate, use the compact packet contract from [SUBAGENT_MANAGEMENT.md](SUBAGENT_MANAGEMENT.md) instead of the full human-facing report structure below.
+
+For delegated `agentic-self-review` responses:
+
+- first line must be exactly `APPROVE` or `BLOCK`
+- include `# Coverage` with up to 3 bullets
+- include `# Findings`
+- for `APPROVE`, `# Findings` must contain only `- none`
+- for `BLOCK`, `# Findings` must contain only blocker entries using these exact fields: `id`, `type`, `location`, `issue`, `required_fix`
+- `type` must be one of `correctness`, `contract`, `validation`, `docs-truth`, `architecture`, `repo-rules`, `tests`
+- file path is required in `location`; line references are required when confidently available
+- do not emit severity summaries, risk sections, architecture essays, or action buckets in delegated `agentic-self-review`
+
 For `general-review`, valid verdicts are:
 
 - `APPROVE`
@@ -167,7 +182,9 @@ Default to `BLOCK` when architectural issues, correctness risks, security concer
 
 ## Output structure
 
-Every review must follow this structure.
+Every `general-review` and `pr-review` must follow this structure.
+
+Delegated `agentic-self-review` uses the compact packet override above. Local fallback review and any explicitly requested human-facing `agentic-self-review` may still use the full structure below.
 
 ### 1. Verdict
 

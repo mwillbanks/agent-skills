@@ -106,11 +106,13 @@ Rules:
 
 Post-completion self-review requires an independent reviewer by default. The dedicated `agentic-self-review` reviewer is pre-approved and must not be blocked by the general sub-agent minimization rules.
 
+These packet rules apply only to delegated manager to reviewer communication for `agentic-self-review`. They do not replace the full human-facing review formats used by `general-review`, `pr-review`, or local fallback review.
+
 Rules:
 
 1. Spawn a dedicated reviewer using `agentic-self-review` for the mandatory post-completion gate.
 2. Do not treat this reviewer as optional because of delegation-overhead heuristics, smallest-viable-execution preference, or conservative anti-parallelism rules.
-3. Provide the smallest sufficient evidence packet: original prompt, clarified requirements, accepted plan, diff or changed files, validation output, relevant screenshots or artifacts, and repository rules.
+3. Use the compact packet contract below. Do not send freeform narrative when the packet will do.
 4. Tell the reviewer to act as the final reviewer and not to modify code.
 5. Do not ask the reviewer to approve. Do not bias the verdict.
 6. If the verdict is exactly `APPROVE`, the gate passes.
@@ -119,11 +121,80 @@ Rules:
 9. Fix blockers, rerun affected validation, and repeat the review gate.
 10. If sub-agent review cannot run because runtime or user constraints actually prevent it, use a documented local fallback review and record the exact constraint.
 
-Reviewer packet rules:
+### Manager to reviewer packet contract
+
+Use tagged markdown sections in this exact order. Keep the packet compact and operational.
+
+Required sections:
+
+1. `# Mode`
+2. `# Task`
+3. `# Repo Root`
+4. `# Review Target`
+5. `# Governing References`
+6. `# Acceptance Basis`
+7. `# Changed Scope`
+8. `# Validation Digest`
+9. `# Review Focus`
+
+Section rules:
+
+- `# Mode`: must state `agentic-self-review`.
+- `# Task`: one short paragraph or up to 3 bullets describing what was completed and what the reviewer is verifying now.
+- `# Repo Root`: single path only.
+- `# Review Target`: state whether the reviewer should inspect changed files, diff, feature folder, or another bounded target.
+- `# Governing References`: only the applicable spec, plan, task, repo-rule, or instruction references.
+- `# Acceptance Basis`: only the completion claims or contracts that the review must verify.
+- `# Changed Scope`: up to 12 bullets listing the main changed files or bounded areas.
+- `# Validation Digest`: up to 10 entries. For each entry include command identity and outcome. Include raw output only for failing or disputed commands.
+- `# Review Focus`: up to 8 bullets calling out disputed, risky, or easy-to-miss areas.
+
+Do not include:
+
+- prior blocker history
+- long narrative summaries
+- repeated repository context
+- full raw validation logs unless a command failed or the failure is under review
+- a separate `current facts` section
+
+Manager packet requirements:
 
 - Do not dump unrelated repo context into the review prompt.
-- Do not omit known failures or disputed areas.
-- Reviewer prompts must be complete enough for integrity, but compressed enough to avoid waste.
+- Do not omit known failures, disputed areas, or incomplete validation.
+- Prefer file paths, commands, and bounded claims over narrative explanation.
+- Keep the packet complete enough for integrity, but compressed enough to avoid waste.
+
+### Reviewer to manager packet contract
+
+Use tagged markdown sections in this exact order.
+
+For approval:
+
+1. First line exactly `APPROVE`
+2. `# Coverage` with up to 3 bullets
+3. `# Findings` with the single bullet `- none`
+
+For a blocking review:
+
+1. First line exactly `BLOCK`
+2. `# Coverage` with up to 3 bullets
+3. `# Findings` containing only blocker entries
+
+Each blocker entry must use this fixed field set:
+
+- `id`: short stable identifier such as `B1`
+- `type`: one of `correctness`, `contract`, `validation`, `docs-truth`, `architecture`, `repo-rules`, `tests`
+- `location`: file path required, line references when confidently available
+- `issue`: the defect stated directly
+- `required_fix`: the minimum corrective action required before approval
+
+Reviewer response requirements:
+
+- Do not restate the full manager packet.
+- Do not emit severity summaries, risk sections, architecture essays, or action buckets in delegated `agentic-self-review`.
+- Treat every finding as blocking regardless of category.
+- Keep coverage factual and bounded.
+- Keep findings operational and remediation-oriented.
 
 ## Management evaluation file
 
