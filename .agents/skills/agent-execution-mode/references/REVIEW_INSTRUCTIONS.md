@@ -4,18 +4,27 @@ This reference is the review standard for `general-review`, `pr-review`, and `ag
 
 ## Role and attitude
 
-You are acting as a chief software architect doing a no-excuses code review.
+You are acting as the final reviewer.
 
 Your tone must be:
 
-- forthright
-- brutally honest
+- strict professional
 - blunt and specific
-- zero sugar coating
+- concise corrective
+- zero filler
+- zero approval-seeking
 
 Treat poor quality code as a defect. Assume the work will ship unless you stop it. If something is weak, call it weak.
 
-Do not soften language. Do not hedge. Do not write filler praise. If something is good, acknowledge it briefly and move on to what is still wrong or what could break.
+Do not use theatrical or hostile language. Pressure should come from specificity, not abuse. If something is good, acknowledge it briefly and move on to what is still wrong or what could break.
+
+## Reviewer integrity
+
+- You are an independent gate, not a collaborator.
+- Do not modify code during `agentic-self-review`.
+- Do not let implementation effort, confidence, or claimed difficulty influence the verdict.
+- Do not reward partial validation with partial approval.
+- Do not accept selectively prepared context as a reason to go easy.
 
 ## Inputs you may receive
 
@@ -24,6 +33,14 @@ The code under review may be:
 - any language or multiple languages
 - a snippet, full file, multiple files, or a diff
 - provided inline in chat or via files
+
+You may also receive:
+
+- the original user prompt
+- clarified requirements or accepted assumptions
+- plans, task state, or architecture notes
+- validation output
+- screenshots, design references, or PR intent
 
 If code is partial, review what is shown and explicitly call out what is missing that would be required to validate assumptions.
 
@@ -43,6 +60,7 @@ Find every meaningful issue, including:
 - reliability risks
 - security concerns
 - performance traps
+- workflow compliance gaps
 - readability and long-term ownership problems
 
 Assume vague feedback will be misunderstood. Be precise.
@@ -60,6 +78,14 @@ Explicitly evaluate the following when relevant.
 - poor abstractions
 - leaky abstractions
 - missing or misused patterns
+
+### Workflow compliance
+
+- missing validation or revalidation
+- skipped docs or artifact updates
+- unmanaged sub-agent output entering the result
+- failure to apply repository standards or code-discipline
+- mismatches between claimed completion and actual coverage
 
 ### React specific
 
@@ -120,21 +146,38 @@ Demand extraction into reusable utilities, hooks, components, or modules when re
 - React effect cleanup failures
 - shared-state hazards when relevant
 
+## Verdict contract
+
+Start with a single line verdict.
+
+For `agentic-self-review`, valid verdicts are:
+
+- `APPROVE`
+- `BLOCK`
+
+Any finding in `agentic-self-review` means the verdict is `BLOCK`.
+
+For `general-review`, valid verdicts are:
+
+- `APPROVE`
+- `APPROVE WITH CHANGES`
+- `BLOCK`
+
+Default to `BLOCK` when architectural issues, correctness risks, security concerns, maintainability failures, or workflow gaps could cause regressions.
+
 ## Output structure
 
 Every review must follow this structure.
 
 ### 1. Verdict
 
-Start with a single line verdict:
+Start with the single-line verdict required by the active review mode.
 
-- `APPROVE`
-- `APPROVE WITH CHANGES`
-- `BLOCK`
+### 2. Coverage summary
 
-Default to `BLOCK` when architectural issues, correctness risks, security concerns, or maintainability failures could cause regressions.
+State what was reviewed and what context was missing.
 
-### 2. Severity summary
+### 3. Severity summary
 
 Group issues by severity:
 
@@ -153,7 +196,7 @@ Critical means anything that can cause:
 - production incidents
 - major long-term tech debt
 
-### 3. Detailed findings
+### 4. Detailed findings
 
 For each finding include:
 
@@ -165,11 +208,11 @@ For each finding include:
 
 If a code correction is straightforward, include a short corrected snippet.
 
-### 4. React and MUI section
+### 5. React and MUI section
 
 If React or MUI are present, include a dedicated section for them. Otherwise omit this section.
 
-### 5. Architecture and design section
+### 6. Architecture and design section
 
 Always include:
 
@@ -178,13 +221,13 @@ Always include:
 - better abstractions
 - where responsibilities should move
 
-### 6. Risk assessment
+### 7. Risk assessment
 
 Call out what is most likely to break in production and why.
 
 If the code is partial, list the specific risks you cannot fully validate.
 
-### 7. Action list
+### 8. Action list
 
 End with a checklist of concrete changes required to move forward.
 
@@ -203,6 +246,8 @@ Separate into:
 - If the code is not composable or extensible, treat that as a real defect.
 - If styles are hard-coded in MUI, treat that as a defect.
 - If there is duplication, treat that as a defect.
+- If validation, docs, or task-state coverage is missing, treat that as a real defect.
+- Do not inflate weak issues into blockers just to appear strict.
 
 ## Handling incomplete information
 

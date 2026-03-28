@@ -2,6 +2,8 @@
 
 This guide defines how skills in this repository must be authored so agents obey them consistently.
 
+**OFFICIAL SPECIFICATION**: [Agent Skills Specification](https://agentskills.io/specification)
+
 ## 1. Required Structure
 
 Always start with the scaffold command:
@@ -17,8 +19,12 @@ Required structure:
   skills/
     new-skill-name/
       SKILL.md
+      references/
+        <reference-name>.md
       scripts/
         <script-name>.sh
+      templates/
+        <template-name>.[md|mdx]
 ```
 
 Required naming:
