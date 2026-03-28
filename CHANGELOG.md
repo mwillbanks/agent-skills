@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.4.0](https://github.com/mwillbanks/agent-skills/compare/1.3.0...1.4.0) (2026-03-28)
+
+
+### Features
+
+* **execution-alignment-gate:** add bounded alignment and clarification control skill ([7e0751b](https://github.com/mwillbanks/agent-skills/commit/7e0751b4c9cf9ff45d861d95a04085f3ce8c5652))
+
 # [1.3.0](https://github.com/mwillbanks/agent-skills/compare/1.2.0...1.3.0) (2026-03-28)
 
 
