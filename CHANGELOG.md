@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.3.0](https://github.com/mwillbanks/agent-skills/compare/1.2.0...1.3.0) (2026-03-28)
+
+
+### Features
+
+* **agent-execution-mode:** harden sub-agent orchestration and learning controls ([ef9052d](https://github.com/mwillbanks/agent-skills/commit/ef9052d4a8cf28cd8a2833c583c460d6081687ad))
+
 # [1.2.0](https://github.com/mwillbanks/agent-skills/compare/1.1.0...1.2.0) (2026-03-24)
 
 
