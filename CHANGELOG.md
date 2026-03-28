@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.2](https://github.com/mwillbanks/agent-skills/compare/1.4.1...1.4.2) (2026-03-28)
+
+
+### Bug Fixes
+
+* **agent-execution-mode:** reviewer subagent communication ([64cf009](https://github.com/mwillbanks/agent-skills/commit/64cf0091122e761277fabe3fda12ca586b19fd94))
+
 ## [1.4.1](https://github.com/mwillbanks/agent-skills/compare/1.4.0...1.4.1) (2026-03-28)
 
 
