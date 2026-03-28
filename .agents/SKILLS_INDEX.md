@@ -6,8 +6,13 @@ This index is the single place to discover active skills and expected usage patt
 
 ### agent-execution-mode
 - Path: `.agents/skills/agent-execution-mode/SKILL.md`
-- Purpose: Forces completion discipline, mode-based behavior, anti-laziness gates, and honest reporting.
-- Use when: Implementing features, fixing bugs, hardening, architecture tasks, or running reviews.
+- Purpose: Enforces complete execution, managed sub-agent orchestration, independent self-review gating, validation, and honest reporting.
+- Use when: Implementing or hardening behavior, running architecture or design work, producing production-grade delivery, or performing review workflows that must be complete and verified.
+
+### execution-alignment-gate
+- Path: `.agents/skills/execution-alignment-gate/SKILL.md`
+- Purpose: Detects materially ambiguous or under-specified requests, routes clarification to the right target, and keeps alignment bounded before execution.
+- Use when: Ambiguity could cause the wrong deliverable, wrong scope, wrong implementation path, wrong validation target, avoidable rework, or repeated token-wasting clarification loops.
 
 ### repo-standards-enforcement
 - Path: `.agents/skills/repo-standards-enforcement/SKILL.md`
@@ -32,16 +37,23 @@ For most coding tasks, use this standard set together:
 3. `code-discipline`
 4. `biome-enforcement`
 
-This standard set prevents partial implementations, enforces standards, preserves Biome enforcement discipline, and blocks unnecessary abstraction sprawl.
+Add `execution-alignment-gate` before execution when ambiguity is material enough to threaten scope, implementation correctness, or validation accuracy.
+
+This standard set prevents partial implementations, enforces standards, preserves Biome enforcement discipline, and blocks unnecessary abstraction sprawl while the alignment gate prevents avoidable wrong-path execution.
 
 ## Mode Defaults
 
 - Default mode: `production`
 - Elevated mode: `hardening` when the task is correctness-sensitive or has failed previously.
+- Other execution modes:
+  - `prototype`
+  - `design`
+  - `architecture`
 - Review modes:
   - `agentic-self-review`
   - `general-review`
   - `pr-review`
+- Retired mode: `recommendation-review` was removed; use `general-review` or `pr-review` instead.
 
 Execution modes `production`, `hardening`, `prototype`, `design`, and `architecture` must run `agentic-self-review` after completion is stated.
 

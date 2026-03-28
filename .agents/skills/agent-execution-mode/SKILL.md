@@ -99,6 +99,18 @@ Detailed workflow rules live in [references/WORKFLOWS.md](references/WORKFLOWS.m
 - If delegation overhead exceeds likely delivery gain, do not delegate.
 - Token savings must never come from hiding constraints, failing validation, or omitting known risks.
 
+## Alignment gating
+
+When material ambiguity, missing decision points, or alignment risk would likely cause wrong-path execution, avoidable rework, or meaningful token waste, apply `execution-alignment-gate` before implementation when that skill is available.
+
+Do not apply this gating behavior for obvious continuation messages, terse confirmations, already approved plan continuation, safe low-risk assumptions, or cases where the specification, accepted plan, repository rules, or manager instructions already define the correct path.
+
+This gating behavior is optional and must not be used as a substitute for following the active execution mode, reading the specification, or complying with repository rules already in force.
+
+When `execution-alignment-gate` is not available, apply the same discipline directly: identify whether ambiguity is material, ask only the minimum clarification needed, avoid open-ended clarification loops, prefer safe stated assumptions when risk is low, and do not guess when missing scope, boundaries, acceptance criteria, or validation expectations would likely cause failure.
+
+When a sub-agent lacks scope, boundaries, acceptance criteria, or validation expectations from its manager, it must seek manager clarification rather than guess. If `execution-alignment-gate` is available, use its manager-mode behavior.
+
 ## Sub-agent management requirements
 
 For managed sub-agent work, keep repo-local evaluations under `.agents/evaluations/management.json`.
