@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.5.0](https://github.com/mwillbanks/agent-skills/compare/1.4.2...1.5.0) (2026-04-02)
+
+
+### Features
+
+* **speckit-feature-orchestrator:** add speckit feature orchestrator ([05e81ae](https://github.com/mwillbanks/agent-skills/commit/05e81ae6e53d62393e546a32a457169f752a5187))
+
 ## [1.4.2](https://github.com/mwillbanks/agent-skills/compare/1.4.1...1.4.2) (2026-03-28)
 
 
