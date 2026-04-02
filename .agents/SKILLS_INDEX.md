@@ -29,6 +29,11 @@ This index is the single place to discover active skills and expected usage patt
 - Purpose: Prevents helper/wrapper/abstraction bloat and enforces reuse of platform, framework, and existing utilities.
 - Use when: Adding or refactoring logic where maintainability, reuse, and abstraction discipline matter.
 
+### speckit-feature-orchestrator
+- Path: `.agents/skills/speckit-feature-orchestrator/SKILL.md`
+- Purpose: Orchestrates a full Speckit feature workflow from constitution amendment through specification, clarification, plan, tasks, and analysis using a management-agent model with `iterate` and `direct` modes.
+- Use when: A user wants to discuss and refine a feature first or directly drive it into implementation-ready Speckit artifacts in one controlled pass.
+
 ## Standard Pairing
 
 For most coding tasks, use this standard set together:

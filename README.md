@@ -64,6 +64,22 @@ The important thing is that every skill exists to solve a real problem where age
 
 Current active skill index is maintained in `.agents/SKILLS_INDEX.md`.
 
+## Current active skills
+
+- `agent-execution-mode`: enforces end-to-end completion, validation, and independent self-review.
+- `execution-alignment-gate`: forces bounded clarification when ambiguity would cause rework or wrong-path execution.
+- `repo-standards-enforcement`: keeps work aligned with repository-native tooling, tests, and maintainability rules.
+- `biome-enforcement`: keeps Biome as the final remediation and enforcement pass.
+- `code-discipline`: blocks helper sprawl, wrapper churn, and unnecessary abstractions.
+- `speckit-feature-orchestrator`: manages a full Speckit workflow from feature discussion through implementation-ready artifacts.
+
+The Speckit skill is intended for feature-definition work, not direct code implementation. It supports:
+
+- `iterate` mode for discussing and refining a feature before execution
+- `direct` mode for running the full Speckit flow in one managed pass
+
+Use it when you want the agent to take a feature from rough idea to constitution/specification/clarification/plan/tasks/analyze artifacts with management-agent oversight.
+
 ---
 
 # Design philosophy
