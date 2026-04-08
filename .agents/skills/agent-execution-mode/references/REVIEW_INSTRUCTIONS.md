@@ -1,6 +1,6 @@
 # Code Review Instructions
 
-This reference is the review standard for `general-review`, `pr-review`, and `agentic-self-review` in `agent-execution-mode`.
+This reference is the review standard for `general-review`, `pr-review`, `agent-review`, and the compatibility alias `agentic-self-review` in `agent-execution-mode`.
 
 ## Role and attitude
 
@@ -21,10 +21,11 @@ Do not use theatrical or hostile language. Pressure should come from specificity
 ## Reviewer integrity
 
 - You are an independent gate, not a collaborator.
-- Do not modify code during `agentic-self-review`.
+- Do not modify code during `agent-review`.
 - Do not let implementation effort, confidence, or claimed difficulty influence the verdict.
 - Do not reward partial validation with partial approval.
 - Do not accept selectively prepared context as a reason to go easy.
+- If the manager packet is materially incomplete or selectively framed, block the work instead of guessing.
 
 ## Inputs you may receive
 
@@ -37,6 +38,7 @@ The code under review may be:
 You may also receive:
 
 - the original user prompt
+- the exact specification, plan, or task paths that governed implementation
 - clarified requirements or accepted assumptions
 - plans, task state, or architecture notes
 - validation output
@@ -85,6 +87,7 @@ Explicitly evaluate the following when relevant.
 - skipped docs or artifact updates
 - unmanaged sub-agent output entering the result
 - failure to apply repository standards or code-discipline
+- incomplete or selectively framed review packets
 - mismatches between claimed completion and actual coverage
 
 ### React specific
@@ -150,18 +153,18 @@ Demand extraction into reusable utilities, hooks, components, or modules when re
 
 Start with a single line verdict.
 
-For `agentic-self-review`, valid verdicts are:
+For `agent-review` and the compatibility alias `agentic-self-review`, valid verdicts are:
 
 - `APPROVE`
 - `BLOCK`
 
-Any finding in `agentic-self-review` means the verdict is `BLOCK`.
+Any finding in `agent-review` means the verdict is `BLOCK`.
 
-### Delegated `agentic-self-review` packet override
+### Delegated `agent-review` packet override
 
-When `agentic-self-review` is being performed by a delegated reviewer for the post-completion gate, use the compact packet contract from [SUBAGENT_MANAGEMENT.md](SUBAGENT_MANAGEMENT.md) instead of the full human-facing report structure below.
+When `agent-review` is being performed by a delegated reviewer for the post-completion gate, use the compact packet contract from [SUBAGENT_MANAGEMENT.md](SUBAGENT_MANAGEMENT.md) instead of the full human-facing report structure below.
 
-For delegated `agentic-self-review` responses:
+For delegated `agent-review` responses:
 
 - first line must be exactly `APPROVE` or `BLOCK`
 - include `# Coverage` with up to 3 bullets
@@ -170,7 +173,14 @@ For delegated `agentic-self-review` responses:
 - for `BLOCK`, `# Findings` must contain only blocker entries using these exact fields: `id`, `type`, `location`, `issue`, `required_fix`
 - `type` must be one of `correctness`, `contract`, `validation`, `docs-truth`, `architecture`, `repo-rules`, `tests`
 - file path is required in `location`; line references are required when confidently available
-- do not emit severity summaries, risk sections, architecture essays, or action buckets in delegated `agentic-self-review`
+- do not emit severity summaries, risk sections, architecture essays, or action buckets in delegated `agent-review`
+
+Packet integrity rules for delegated `agent-review`:
+
+- if a spec-governed change is under review and the packet omits the spec path, return `BLOCK`
+- if the work was prompt-driven and the packet omits the real goal or concrete specifics, return `BLOCK`
+- if code changes are in scope and the packet omits relevant `code-discipline` or `repo-standards-enforcement` references, return `BLOCK`
+- if material validation results, disputed areas, or known failures are omitted, return `BLOCK`
 
 For `general-review`, valid verdicts are:
 
@@ -184,7 +194,7 @@ Default to `BLOCK` when architectural issues, correctness risks, security concer
 
 Every `general-review` and `pr-review` must follow this structure.
 
-Delegated `agentic-self-review` uses the compact packet override above. Local fallback review and any explicitly requested human-facing `agentic-self-review` may still use the full structure below.
+Delegated `agent-review` uses the compact packet override above. Local fallback review and any explicitly requested human-facing `agent-review` may still use the full structure below.
 
 ### 1. Verdict
 
@@ -264,6 +274,7 @@ Separate into:
 - If styles are hard-coded in MUI, treat that as a defect.
 - If there is duplication, treat that as a defect.
 - If validation, docs, or task-state coverage is missing, treat that as a real defect.
+- If the review packet hides relevant intent, rules, or failures, treat that as a blocking defect.
 - Do not inflate weak issues into blockers just to appear strict.
 
 ## Handling incomplete information

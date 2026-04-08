@@ -11,9 +11,24 @@ This file defines the durable workflow and document rules for `agent-execution-m
 - `created-at` is immutable after creation.
 - `updated-at` changes every time the artifact is materially updated.
 
+## Mode resolution workflow
+
+Infer the mode from the task intent before defaulting to `production`.
+
+Resolution rules:
+
+- use `documentation` when the output is documentation, a runbook, prompt guidance, or an explanation aligned to the current project state
+- use `specification-and-plan` when the output is a spec, plan, tasks, RFC, or implementation workflow before coding
+- use `bugfix` when the task centers on broken behavior, regressions, failing tests, or defect correction
+- use `hardening` when the task centers on closing repeated correctness gaps, abuse cases, reliability gaps, or repeated regressions
+- use `agent-review`, `general-review`, or `pr-review` when the primary output is review rather than implementation
+- use `post-mortem` when the task asks why repeated prompts or rework were needed, or what process improvements would have prevented it
+- use `design` or `architecture` when visual correctness or system decision-making is the main deliverable
+- use `production` only when the task is implementation-oriented and no more specific mode clearly fits
+
 ## Task workflow
 
-Use task tracking for implementation-oriented work, architecture work with active execution, and any large task that benefits from durable state.
+Use task tracking for implementation-oriented work, bugfix work, documentation work with durable deliverables, specification work with active execution, architecture work with active execution, and any large task that benefits from durable state.
 
 Required files:
 
@@ -43,7 +58,7 @@ Suggested task states:
 
 ## Review workflow
 
-Use review tracking for `general-review` and `pr-review`. `agentic-self-review` uses the same review standard but does not create a markdown artifact unless explicitly required.
+Use review tracking for `general-review` and `pr-review`. `agent-review` and its compatibility alias `agentic-self-review` use the same review standard but do not create a markdown artifact unless explicitly required.
 
 Required files:
 
@@ -63,7 +78,7 @@ Rules:
 - On review iteration 2 or later, add a `Resolved Since Previous Review` section before new findings.
 - New findings for the current iteration go at the top of the current iteration block.
 - Re-reviewing without resolving or reclassifying previous findings is sloppy and invalidates the artifact.
-- Post-completion `agentic-self-review` iterations should still be recorded in task or report state, even when no review artifact exists.
+- Post-completion `agent-review` iterations should still be recorded in task or report state, even when no review artifact exists.
 
 Suggested review states:
 
@@ -137,15 +152,21 @@ Rules:
 - Expand scope only when configs, shared contracts, or cross-cutting boundaries changed.
 - When project-specific enforcement tooling exists, follow the repository-owned skill or workflow for when it runs. `repo-standards-enforcement` and `biome-enforcement` are examples of concern-specific owners, not universal requirements.
 
+For `documentation`, `specification-and-plan`, and `post-mortem`, replace code validation with evidence validation when no code changes are in scope. Evidence validation should identify the source artifacts that support the resulting claims.
+
 ## Sub-agent orchestration workflow
 
 The following modes permit managed sub-agent orchestration when the expected delivery gain outweighs the token cost and the delegation shape is justified:
 
 - `production`
+- `bugfix`
 - `hardening`
 - `prototype`
 - `design`
+- `documentation`
+- `specification-and-plan`
 - `architecture`
+- `post-mortem`
 
 The manager must prefer the smallest viable execution shape in this order:
 
@@ -174,29 +195,93 @@ Manager responsibilities:
 
 - consult `.agents/evaluations/management.json` when it exists
 - choose agent type and prompt pattern deliberately instead of delegating blindly
-- provide the original user prompt, clarified requirements, applicable skills, files in scope, validation plan, and stop conditions
+- provide the original user prompt or exact source-intent reference, clarified requirements, applicable skills, files in scope, validation or evidence plan, and stop conditions
 - provide only the minimum context required for the worker task and reuse compact manager-prepared context packets when similar workers need the same scoped inputs
 - prevent overlapping write ownership unless one agent is read-only
 - review every worker result before merging or approving it
 - give strict professional feedback with concise corrective guidance
 - escalate by adding specificity, constraints, and evidence instead of hostile language
 
-## Post-completion self-review workflow
+### Manager to worker packet contract
 
-The following modes must run `agentic-self-review` after completion has been stated:
+For meaningful worker prompts, use tagged markdown sections in this exact order:
+
+1. `# Mode`
+2. `# Intent Source`
+3. `# Task`
+4. `# Scope`
+5. `# Governing References`
+6. `# Validation Or Evidence Plan`
+7. `# Acceptance Criteria`
+8. `# Stop Conditions`
+
+Section rules:
+
+- `# Mode`: the inferred or explicitly requested mode.
+- `# Intent Source`: if a spec exists, include the exact spec path and any accepted plan or task files. If no spec exists, include the original prompt or a compact faithful summary with the real goal and concrete specifics.
+- `# Task`: one short paragraph or up to 5 bullets describing what the worker must do.
+- `# Scope`: bounded files, directories, or artifacts. Keep to 12 bullets or fewer.
+- `# Governing References`: only the skills, docs, specs, or instructions that actually govern the work. Include `code-discipline` and `repo-standards-enforcement` when code changes are in scope and those checks are relevant.
+- `# Validation Or Evidence Plan`: up to 10 bullets. For code work include commands. For non-code work include the source artifacts that must support the claims.
+- `# Acceptance Criteria`: only the conditions the worker must satisfy.
+- `# Stop Conditions`: call out missing context, forbidden scope expansion, or conditions that require the worker to hand back control.
+
+Missing or selectively framed intent in `# Intent Source` is a manager defect.
+
+## Bugfix and hardening workflow
+
+For `bugfix` and `hardening`:
+
+1. State the bug, expected behavior, and evidence or reproduction before editing.
+2. Identify the likely failure surface and the minimum safe repair.
+3. Validate the repair against the original failure and any adjacent regression risk.
+4. Carry that evidence into the `agent-review` packet.
+
+## Documentation workflow
+
+For `documentation`:
+
+1. Identify the source of truth for each claim, such as code, tests, validated runtime behavior, existing docs, or operator artifacts.
+2. Mark unknowns explicitly instead of inventing answers.
+3. If documentation claims product behavior or operational readiness changed, run `agent-review` after completion.
+
+## Specification and plan workflow
+
+For `specification-and-plan`:
+
+1. Detect repo-native or organization-native spec tooling first.
+2. Prefer that workflow when present, such as Speckit, Speckitty, Symfony, or another established system.
+3. If no spec workflow exists, recommend adding one, allow the user to continue, and record the decision in task or report state.
+4. Produce durable artifacts that a later implementation pass can use directly.
+
+## Post-mortem workflow
+
+For `post-mortem`:
+
+1. Identify where prompt quality, missing docs, missing skills, missing agent instructions, or missing MCP capabilities increased rework.
+2. Recommend the highest-leverage additions in four buckets when relevant: skills, documentation, agent or instruction files, and MCP or tooling.
+3. Provide a tighter prompt shape that would have produced a more precise or more efficient result.
+4. Keep the mode analysis-only by default. Do not add a nested mandatory `agent-review` unless the user explicitly asks for one or the scope expands into durable repo changes that themselves require review.
+
+## Post-completion agent-review workflow
+
+The following modes must run `agent-review` after completion has been stated:
 
 - `production`
+- `bugfix`
 - `hardening`
 - `prototype`
 - `design`
+- `documentation`
+- `specification-and-plan`
 - `architecture`
 
 Rules:
 
 1. Do the work.
 2. State completion only when the task is actually complete for the chosen mode.
-3. Spawn a dedicated review sub-agent using `agentic-self-review`. This reviewer is approved by default for the mandatory post-completion gate and is not blocked by the general delegation minimization rules.
-4. Provide the smallest sufficient evidence packet: original user prompt, clarified requirements, accepted plan, changed files or diff, validation results, relevant screenshots or artifacts, and applicable repository rules.
+3. Spawn a dedicated review sub-agent using `agent-review` or the compatibility alias `agentic-self-review`. This reviewer is approved by default for the mandatory post-completion gate and is not blocked by the general delegation minimization rules.
+4. Provide the smallest sufficient evidence packet: source intent, clarified requirements, accepted plan, changed files or diff, validation or evidence results, relevant screenshots or artifacts, and applicable repository rules.
 5. Instruct the reviewer to act as the final reviewer and not as a modifier.
 6. If a review sub-agent cannot run because runtime or user constraints actually prevent it, perform a documented local fallback review and record the exact constraint.
 7. If the verdict is exactly `APPROVE`, the gate passes.
@@ -210,6 +295,8 @@ This is a mandatory second gate, not an optional polish step.
 Reviewer packet rules:
 
 - Do not dump unrelated repo context into the review prompt.
+- Do not omit the real source intent. If a spec was implemented, include its exact path and the accepted plan or task files when applicable. If no spec existed, include the original prompt or a faithful compact summary with the real goal and concrete specifics.
+- Do not omit `code-discipline` or `repo-standards-enforcement` from governing references when code changes are in scope and those checks matter.
 - Do not omit known failures or disputed areas.
 - Reviewer prompts must be complete enough for integrity, but compressed enough to avoid waste.
 

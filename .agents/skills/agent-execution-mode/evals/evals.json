@@ -1,0 +1,401 @@
+{
+  "skill_name": "agent-execution-mode",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Implement a new audit-log export endpoint for the admin API. It needs cursor pagination, CSV output, docs updates, and the existing Bun test suite kept green. I want this returned as complete work, not a sketch.",
+      "expected_output": "Chooses production mode and describes a full implementation workflow with validation, docs updates, and a mandatory independent agent-review gate.",
+      "files": [],
+      "expectations": [
+        "Infers or selects production mode.",
+        "Requires repo-native validation and documentation updates.",
+        "Requires an independent agent-review before concluding."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Add a retry budget to the invoice sync worker, wire it through the config layer, and update the operator docs. We already know we want the final implementation, not a proposal.",
+      "expected_output": "Chooses production mode and keeps the task in an implementation workflow rather than rerouting into planning or review.",
+      "files": [],
+      "expectations": [
+        "Infers or selects production mode.",
+        "Keeps the workflow implementation-oriented.",
+        "Mentions validation and docs alignment."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "No special mode here: wire the new org-level feature flag into the API, UI, and docs, and make sure the result is actually ship-ready.",
+      "expected_output": "Infers production mode from the task and does not ask to stay in production by default without checking task intent.",
+      "files": [],
+      "expectations": [
+        "Infers production mode from task semantics.",
+        "Does not misclassify the task as documentation-only or specification work.",
+        "Requires the review gate before completion."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Bugfix mode: the OAuth callback is dropping the returnTo parameter after login and customers land on the wrong page. Fix the defect and prove the original regression is covered.",
+      "expected_output": "Chooses bugfix mode and starts by restating the bug, expected behavior, evidence, and fix target before editing.",
+      "files": [],
+      "expectations": [
+        "Selects bugfix mode.",
+        "Restates the bug, expected behavior, and evidence before implementation.",
+        "Requires validation of the repaired behavior and the review gate."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "A checkout test started failing after yesterday's refactor: discount codes now disappear when the cart refreshes. Please repair the bug without widening scope.",
+      "expected_output": "Chooses bugfix mode even though the prompt never names it, and emphasizes minimum safe repair plus regression validation.",
+      "files": [],
+      "expectations": [
+        "Infers bugfix mode.",
+        "Calls for a minimum safe repair rather than a broad rewrite.",
+        "Requires validation against the original failing behavior."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Users say the CSV import worked last week but now silently skips the last row when the file ends with a blank line. Track down the issue and fix it.",
+      "expected_output": "Infers bugfix mode from the defect-oriented task and requires the agent to understand the current failure before making changes.",
+      "files": [],
+      "expectations": [
+        "Infers bugfix mode from task semantics.",
+        "Requires stating the current failure and expected behavior before editing.",
+        "Includes a repair verification step."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Hardening mode: the payments webhook handler technically works, but we keep finding edge cases around duplicate delivery, slow downstream calls, and stale retries. Close the reliability gaps.",
+      "expected_output": "Chooses hardening mode and adds stronger regression, abuse-case, and reliability scrutiny than a normal implementation pass.",
+      "files": [],
+      "expectations": [
+        "Selects hardening mode.",
+        "Requires stronger edge-case and regression analysis than production mode alone.",
+        "Requires the review gate after validation."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "The auth rate limiter has been patched three times already and we still get bursts that slip through during deploys. I need a pass that closes the reliability gaps instead of another narrow fix.",
+      "expected_output": "Infers hardening mode and does not collapse this into bugfix or production.",
+      "files": [],
+      "expectations": [
+        "Infers hardening mode.",
+        "Treats repeated regressions as a signal for stronger scrutiny.",
+        "Mentions abuse cases or adjacent failure surfaces."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Please go back over the queue consumer and make it resilient to duplicate jobs, malformed payloads, and slow dependency responses. We already know the happy path works.",
+      "expected_output": "Infers hardening mode from the emphasis on reliability and edge cases.",
+      "files": [],
+      "expectations": [
+        "Infers hardening mode from task semantics.",
+        "Focuses on edge cases and defensive behavior.",
+        "Requires stronger validation than a prototype pass."
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Run the final independent review gate on the user provisioning feature you just completed. I do not want code edits right now, only the review verdict and blockers if any.",
+      "expected_output": "Chooses agent-review mode and stays in review-only behavior.",
+      "files": [],
+      "expectations": [
+        "Selects agent-review mode.",
+        "Stays review-only and does not expand into editing.",
+        "Uses the compact review verdict shape with blocking findings only when needed."
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Before you tell me the migration is done, run your strict internal review gate on it and make sure the review actually checks repo policy and abstraction discipline too.",
+      "expected_output": "Infers agent-review mode and explicitly includes code-discipline and repo-standards-enforcement checks.",
+      "files": [],
+      "expectations": [
+        "Infers agent-review mode.",
+        "Mentions code-discipline and repo-standards-enforcement as review inputs when relevant.",
+        "Treats any finding as blocking."
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Use the compact reviewer packet, not a long essay, and tell me whether the completed search indexing work should be approved or blocked.",
+      "expected_output": "Infers agent-review mode and emphasizes the compact delegated packet protocol.",
+      "files": [],
+      "expectations": [
+        "Infers agent-review mode from the task.",
+        "Uses the compact packet protocol rather than a human-facing long review.",
+        "Returns an approve-or-block style outcome."
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "General review please: inspect the local analytics refactor and produce a written review artifact with findings, risks, and required changes.",
+      "expected_output": "Chooses general-review mode and produces a formal review artifact workflow rather than the compact post-completion gate.",
+      "files": [],
+      "expectations": [
+        "Selects general-review mode.",
+        "Mentions a review artifact.",
+        "Uses the full review structure rather than the compact reviewer packet."
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "I want a full code review of the new bulk invite flow, with a proper markdown review doc I can keep in the repo.",
+      "expected_output": "Infers general-review mode because the user wants a durable review document, not an internal gate only.",
+      "files": [],
+      "expectations": [
+        "Infers general-review mode.",
+        "Calls for a durable markdown artifact.",
+        "Separates this from agent-review behavior."
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Look over the local branch changes for the scheduler cleanup and write up a formal review with severity buckets and concrete fixes.",
+      "expected_output": "Infers general-review mode from the request for a formal write-up of local changes.",
+      "files": [],
+      "expectations": [
+        "Infers general-review mode from task semantics.",
+        "Mentions structured findings and fixes.",
+        "Keeps this distinct from PR-backed review."
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "PR review mode: review https://github.com/acme/payments/pull/482. The stated intent is to reduce webhook latency without changing retry semantics.",
+      "expected_output": "Chooses pr-review mode and uses PR intent plus diff inspection through GitHub-aware review flow.",
+      "files": [],
+      "expectations": [
+        "Selects pr-review mode.",
+        "Requires the PR link and stated intent.",
+        "Mentions inline review comments plus overall review state submission."
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "Can you review PR 197 in our repo? It claims to simplify tenant bootstrapping, but I want the review against the intended behavior, not just style comments.",
+      "expected_output": "Infers pr-review mode and emphasizes review against PR intent and regression risk.",
+      "files": [],
+      "expectations": [
+        "Infers pr-review mode.",
+        "Reviews against stated intent and behavior change.",
+        "Keeps the workflow GitHub-backed rather than local-only."
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "Please do the GitHub PR review for the admin impersonation fix and submit the final review state when you're done.",
+      "expected_output": "Infers pr-review mode from the request to submit a review state.",
+      "files": [],
+      "expectations": [
+        "Infers pr-review mode from task semantics.",
+        "Mentions submission of inline comments or overall review state.",
+        "Keeps the review tied to the PR, not just a local diff."
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Prototype mode: rough in a demo-only dashboard for tomorrow's customer call. It can be lower polish, but don't lie about what's working and don't skip the safety checks.",
+      "expected_output": "Chooses prototype mode and allows reduced polish without dropping validation honesty or the review gate.",
+      "files": [],
+      "expectations": [
+        "Selects prototype mode.",
+        "Allows reduced polish only because the prompt explicitly asks for it.",
+        "Still requires honest validation and the review gate."
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "I need a quick spike for a read-only metrics page by lunch. It does not need to be production grade, but I do need to know what was actually validated and what wasn't.",
+      "expected_output": "Infers prototype mode and keeps honesty about scope and validation.",
+      "files": [],
+      "expectations": [
+        "Infers prototype mode.",
+        "States the narrower polish target without calling incomplete work complete.",
+        "Keeps validation claims honest."
+      ]
+    },
+    {
+      "id": 21,
+      "prompt": "Put together a throwaway proof of concept for the new report filter UI so we can decide whether to invest more. Keep it safe and clear about what's missing.",
+      "expected_output": "Infers prototype mode because the task is exploratory and explicitly not final delivery.",
+      "files": [],
+      "expectations": [
+        "Infers prototype mode from the task.",
+        "Avoids overstating completeness.",
+        "Keeps the review gate and safety checks in scope."
+      ]
+    },
+    {
+      "id": 22,
+      "prompt": "Design mode: implement this Figma spec for the onboarding checklist and verify the responsive states as well, not just the static screenshot.",
+      "expected_output": "Chooses design mode and uses Figma-first visual validation plus behavior checks where relevant.",
+      "files": [],
+      "expectations": [
+        "Selects design mode.",
+        "Uses Figma or equivalent design references first.",
+        "Requires design and implementation validation, not just visual parity."
+      ]
+    },
+    {
+      "id": 23,
+      "prompt": "I've attached screenshots for the billing settings drawer. Please make the UI match the screenshots and verify the interactive states on desktop and mobile.",
+      "expected_output": "Infers design mode without needing the user to name it explicitly.",
+      "files": [],
+      "expectations": [
+        "Infers design mode.",
+        "Uses screenshot-driven validation when Figma is unavailable.",
+        "Checks interactions or responsive behavior, not only visuals."
+      ]
+    },
+    {
+      "id": 24,
+      "prompt": "The goal here is visual implementation alignment for a new account switcher panel. Match the design reference and make sure the implemented states are correct.",
+      "expected_output": "Infers design mode from the request for visual alignment and state correctness.",
+      "files": [],
+      "expectations": [
+        "Infers design mode from task semantics.",
+        "Mentions both visual and state validation.",
+        "Does not misclassify the task as pure production or documentation work."
+      ]
+    },
+    {
+      "id": 25,
+      "prompt": "Documentation mode: inspect the current deploy pipeline and write the operator runbook for how to restart a failed release without inventing steps that aren't real.",
+      "expected_output": "Chooses documentation mode and grounds claims in inspected source artifacts or verified behavior.",
+      "files": [],
+      "expectations": [
+        "Selects documentation mode.",
+        "Requires source-of-truth evidence for documentation claims.",
+        "Keeps unknowns explicit instead of guessing."
+      ]
+    },
+    {
+      "id": 26,
+      "prompt": "Update the README so it matches the actual CLI flags and examples in the current codebase. I want the docs aligned to reality, not rewritten from memory.",
+      "expected_output": "Infers documentation mode and checks real code or artifacts before drafting docs.",
+      "files": [],
+      "expectations": [
+        "Infers documentation mode.",
+        "Uses current code or validated artifacts as the source of truth.",
+        "Avoids inventing unsupported behavior."
+      ]
+    },
+    {
+      "id": 27,
+      "prompt": "Please document how the workspace task runner actually works in this repo and call out anything that's still unknown instead of smoothing it over.",
+      "expected_output": "Infers documentation mode and keeps unverified details marked as unknown.",
+      "files": [],
+      "expectations": [
+        "Infers documentation mode from the task.",
+        "Marks unknowns explicitly.",
+        "Stays in documentation work rather than drifting into implementation."
+      ]
+    },
+    {
+      "id": 28,
+      "prompt": "Specification and plan mode: before anybody touches code, draft the spec, plan, and task list for multi-tenant API keys. Use our existing spec workflow if we have one.",
+      "expected_output": "Chooses specification-and-plan mode and prefers an existing spec-driven workflow when present.",
+      "files": [],
+      "expectations": [
+        "Selects specification-and-plan mode.",
+        "Checks for repo-native spec tooling first.",
+        "Produces durable spec, plan, and task outputs."
+      ]
+    },
+    {
+      "id": 29,
+      "prompt": "I need an implementation plan and acceptance criteria for replacing the nightly cron with an event-driven pipeline. If we don't have a proper spec workflow yet, tell me what we'd want.",
+      "expected_output": "Infers specification-and-plan mode and recommends a spec workflow when absent without blocking progress.",
+      "files": [],
+      "expectations": [
+        "Infers specification-and-plan mode.",
+        "Recommends adding a spec-driven workflow when none exists.",
+        "Allows work to continue after recording that decision."
+      ]
+    },
+    {
+      "id": 30,
+      "prompt": "Can you shape the next feature into a real spec with plan and tasks instead of jumping straight into coding? The feature is account-level retention policies with audit hooks.",
+      "expected_output": "Infers specification-and-plan mode from the request to create durable planning artifacts before code.",
+      "files": [],
+      "expectations": [
+        "Infers specification-and-plan mode from the task.",
+        "Keeps the work in planning artifacts instead of implementation.",
+        "Mentions durable outputs another agent can implement later."
+      ]
+    },
+    {
+      "id": 31,
+      "prompt": "Architecture mode: design how our notification service should be split so email, SMS, and webhooks stop sharing retry state. I need durable system decisions, not code golf.",
+      "expected_output": "Chooses architecture mode and focuses on boundaries, decisions, and reusable structure.",
+      "files": [],
+      "expectations": [
+        "Selects architecture mode.",
+        "Focuses on system decisions and boundaries.",
+        "Requires durable artifacts and the review gate."
+      ]
+    },
+    {
+      "id": 32,
+      "prompt": "We need to decide whether the reporting pipeline should stay synchronous or move to queued fan-out. Please produce the architecture decision and the plan that downstream implementation can use.",
+      "expected_output": "Infers architecture mode because the deliverable is a system decision and reusable structure.",
+      "files": [],
+      "expectations": [
+        "Infers architecture mode.",
+        "Produces durable decisions instead of implementation-only output.",
+        "Separates architecture work from a normal production task."
+      ]
+    },
+    {
+      "id": 33,
+      "prompt": "Figure out the right boundary between the billing domain and the reporting domain so we stop leaking invoice internals everywhere.",
+      "expected_output": "Infers architecture mode from the focus on domain boundaries and structural decisions.",
+      "files": [],
+      "expectations": [
+        "Infers architecture mode from task semantics.",
+        "Addresses layering or boundary decisions.",
+        "Uses durable design output rather than a narrow bugfix."
+      ]
+    },
+    {
+      "id": 34,
+      "prompt": "Post-mortem mode: it took four prompts to get the user export feature done. Tell me what docs, skills, instructions, MCPs, or prompt changes would have made this easier and more precise.",
+      "expected_output": "Chooses post-mortem mode and recommends concrete process improvements rather than returning to implementation.",
+      "files": [],
+      "expectations": [
+        "Selects post-mortem mode.",
+        "Recommends improvements across skills, docs, agent instructions, or MCP tooling when relevant.",
+        "Suggests how a tighter prompt would have improved precision or efficiency."
+      ]
+    },
+    {
+      "id": 35,
+      "prompt": "Why did we need so much rework on the billing sync task, and what should exist in the repo before the next agent touches that area?",
+      "expected_output": "Infers post-mortem mode from the request for process analysis after repeated rework.",
+      "files": [],
+      "expectations": [
+        "Infers post-mortem mode.",
+        "Analyzes what was missing in the workflow or repository setup.",
+        "Produces concrete recommendations rather than vague hindsight."
+      ]
+    },
+    {
+      "id": 36,
+      "prompt": "Give me prompt feedback on the migration request we just struggled through and tell me what repo additions would reduce the number of corrective prompts next time.",
+      "expected_output": "Infers post-mortem mode and focuses on prompt quality plus repo additions that would reduce churn.",
+      "files": [],
+      "expectations": [
+        "Infers post-mortem mode from task semantics.",
+        "Provides prompt-improvement guidance.",
+        "Recommends concrete repo additions such as skills, docs, agent instructions, or tooling."
+      ]
+    }
+  ]
+}

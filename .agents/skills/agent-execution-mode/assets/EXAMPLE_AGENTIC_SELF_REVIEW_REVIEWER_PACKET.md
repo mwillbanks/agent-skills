@@ -3,6 +3,7 @@ BLOCK
 # Coverage
 - Reviewed the bounded feature artifacts, changed runtime and CLI files, and the cited validation documents.
 - Did not replay live commands. Verdict is based on direct code and artifact inspection.
+- Verified that the packet included the governing spec, plan, and repository rule references needed for an independent review.
 
 # Findings
 - id: B1

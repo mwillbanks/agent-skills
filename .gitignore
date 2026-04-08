@@ -1,6 +1,10 @@
-node_modules/
+.agents/reports/
+.agents/skill-workspaces
+.agents/skills/mcp-builder
+.agents/skills/skill-creator
+.agents/task-state.md
 .DS_Store
 .reviews/
-.agents/task-state.md
-.agents/reports/
 .vscode/
+node_modules/
+skills-lock.json

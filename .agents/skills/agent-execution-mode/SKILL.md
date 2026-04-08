@@ -1,8 +1,8 @@
 ---
 name: agent-execution-mode
-description: Enforces complete execution, disciplined sub-agent use, independent self-review gating, validation, and reporting for implementation, architecture, design, and review tasks. Use when work must be complete, verified, and documented instead of approximate or partial.
+description: Enforces complete execution, mode-aware delivery, compact sub-agent communication, independent agent-review gating, validation, and reporting for implementation, bugfix, hardening, documentation, specification, architecture, design, review, and post-mortem tasks. Use whenever work must be completed, reviewed, validated, or documented through an explicit execution mode instead of handled ad hoc.
 license: Apache-2.0
-compatibility: Best with agents that support sub-agents, local repository access, and repo-native validation tooling. Approves a dedicated sub-agent by default for mandatory `agentic-self-review` and allows a documented local fallback only when delegated review is unavailable or explicitly blocked.
+compatibility: Best with agents that support sub-agents, local repository access, and repo-native validation tooling. Uses `agent-review` as the preferred label for the mandatory independent review gate and keeps `agentic-self-review` as a compatibility alias. Approves a dedicated review sub-agent by default for that gate and allows a documented local fallback only when delegated review is genuinely unavailable or explicitly blocked.
 metadata:
   author: Mike Willbanks
   repository: https://github.com/mwillbanks/agent-skills
@@ -12,7 +12,7 @@ metadata:
 
 # Agent Execution Mode
 
-Use this skill whenever the user expects real completion: implementation, hardening, architecture, design alignment, review, documentation repair, or production-grade delivery.
+Use this skill whenever the user expects real completion: implementation, bug repair, hardening, architecture, design alignment, review, documentation, specification, or production-grade delivery.
 
 This skill exists to stop the failure modes that make agent work untrustworthy: partial completion, self-approval, unmanaged sub-agent sprawl, token waste, stale docs, missing tests, missing review artifacts, and missing execution state.
 
@@ -21,51 +21,81 @@ This skill exists to stop the failure modes that make agent work untrustworthy: 
 Activate this skill when the request involves any of the following:
 
 - implementing or fixing behavior that should be complete when returned
+- bug investigation or bug fixing where the current behavior must be understood before edits begin
 - hardening an existing implementation after regressions, repeated failures, or correctness gaps
+- documentation creation or repair that must reflect the real project state instead of guessed behavior
+- specification or plan creation before implementation, especially when the work should be driven by a spec tool or durable task file
 - architecture or system design work that needs explicit decisions and durable documentation
 - code review, PR review, or self-review that must produce a reliable artifact
 - design-driven work where implementation must be checked against a specification or screenshot
+- post-mortem analysis after repeated prompt churn, missed requirements, or rework
 - work that benefits from delegated parallel discovery, implementation, validation, or review under a managed workflow
 - final reporting for substantial work
 
-Default to `production` unless the user clearly requests another mode.
+Infer the mode from task intent before defaulting. Use `production` only when the task does not clearly map to a more specific mode.
 
 ## Modes
 
 Supported modes:
 
 - `production`
+- `bugfix`
 - `hardening`
-- `agentic-self-review`
+- `agent-review`
+- `agentic-self-review` (compatibility alias of `agent-review`)
 - `general-review`
 - `pr-review`
 - `prototype`
 - `design`
+- `documentation`
+- `specification-and-plan`
 - `architecture`
+- `post-mortem`
 
 Mode intent:
 
-- `production`: complete implementation using repo-native patterns, managed sub-agent delegation when it improves delivery, tests and docs updated where needed, and a mandatory independent `agentic-self-review` gate before concluding.
-- `hardening`: everything in `production`, plus stronger regression scrutiny, edge-case repair, and stricter validation. The post-completion review gate is mandatory.
-- `agentic-self-review`: act as the final reviewer using [references/REVIEW_INSTRUCTIONS.md](references/REVIEW_INSTRUCTIONS.md). Review only. Do not modify code unless the user explicitly changes the scope. Do not create a review artifact unless explicitly requested.
+- `production`: complete implementation using repo-native patterns, managed sub-agent delegation when it improves delivery, tests and docs updated where needed, and a mandatory independent `agent-review` gate before concluding.
+- `bugfix`: restate the bug, expected behavior, current evidence, and likely failure surface before editing. Implement the minimum correct repair, validate the fix, and run the mandatory `agent-review` gate.
+- `hardening`: everything in `production` and `bugfix`, plus stronger regression scrutiny, edge-case repair, abuse-case review, and stricter validation. The post-completion review gate is mandatory.
+- `agent-review`: act as the final reviewer using [references/REVIEW_INSTRUCTIONS.md](references/REVIEW_INSTRUCTIONS.md). Review only. Do not modify code unless the user explicitly changes the scope. In delegated post-completion use, follow the compact packet protocol from [references/SUBAGENT_MANAGEMENT.md](references/SUBAGENT_MANAGEMENT.md). Do not create a markdown artifact unless explicitly requested.
 - `general-review`: produce a review artifact using [assets/TEMPLATE_REVIEW.md](assets/TEMPLATE_REVIEW.md) and the standard in [references/REVIEW_INSTRUCTIONS.md](references/REVIEW_INSTRUCTIONS.md).
 - `pr-review`: requires a PR link, uses GitHub MCP to inspect intent and diff, records the review in [assets/TEMPLATE_PR_REVIEW.md](assets/TEMPLATE_PR_REVIEW.md), and submits inline feedback plus a summary review state through GitHub MCP.
 - `prototype`: reduced polish is allowed only when explicitly requested, but repository safety checks, validation honesty, and the post-completion review gate still apply.
 - `design`: design-focused work only. Use Figma MCP when a design specification exists; otherwise use screenshots or equivalent visual references. Do not claim runtime completeness unless it was actually implemented. The post-completion review gate is mandatory.
+- `documentation`: inspect the real project state and create or repair docs, runbooks, prompts, or operator guidance. Do not invent behavior, status, or validation that was not directly verified. Use `agent-review` when the documentation is substantial or when changed docs make product or operational claims.
+- `specification-and-plan`: create or update the specification, plan, and task breakdown before implementation. Prefer repo-native spec tooling and workflows such as Speckit, Speckitty, Symfony, or equivalent when present. If no spec-driven workflow exists, recommend adding one, allow the user to continue, record that decision, and remind them in the final output.
 - `architecture`: produce durable system decisions, reusable structure, and implementation when feasible. The post-completion review gate is mandatory.
+- `post-mortem`: analyze why repeated prompts, missed requirements, or rework happened. Recommend skills, documentation, `agent.md`, MCP tooling, or prompt changes that would have reduced friction or produced a more precise result earlier. Do not expand into code changes unless the user changes scope. This mode is analysis-only by default and does not add a nested mandatory `agent-review` unless the user explicitly requests one or the scope expands into durable repo changes.
 
 `recommendation-review` is removed. Use `general-review` or `pr-review` instead.
+
+## Mode selection rules
+
+- infer `documentation` when the user asks to document, explain, update docs, produce a runbook, or align prompts or guidance to real behavior
+- infer `specification-and-plan` when the user asks for a specification, implementation plan, tasks, RFC, or workflow design before code changes
+- infer `bugfix` when the task centers on a failing behavior, regression, broken test, or defect explanation
+- infer `hardening` when the task centers on repeated breakage, production reliability, abuse cases, or closing correctness gaps across existing code
+- infer `agent-review`, `general-review`, or `pr-review` when the user primarily wants review rather than implementation
+- infer `post-mortem` when the user asks why repeated prompts were needed, what should have existed first, or how the workflow or prompt should change next time
+- infer `design` or `architecture` when the output is primarily visual implementation alignment or system design decisions
+- use `production` only when the task is implementation-oriented and no more specific mode clearly fits
 
 ## Non-negotiable behavior
 
 - Do not return a partial implementation as complete work.
 - Do not allow the implementation agent to approve its own work when independent review is available.
+- Do not skip the mandatory independent `agent-review` gate when delegated review is available.
 - Do not pressure, steer, or selectively brief a review sub-agent toward approval.
-- Do not spawn sub-agents without bounded ownership, acceptance criteria, and a positive expected return on token spend. The mandatory post-completion `agentic-self-review` reviewer satisfies this gate by policy and is not blocked by discretionary ROI arguments.
+- Do not omit the source intent from a worker or reviewer packet. If a specification was implemented, include the exact spec path and the relevant plan or task files when they exist. If there was no spec, include the original prompt or a compact faithful summary with the real goal and concrete specifics.
+- Do not hide relevant governing rules from the reviewer. When code changes are in scope, `code-discipline` and `repo-standards-enforcement` must be surfaced when they are relevant.
+- Do not spawn sub-agents without bounded ownership, acceptance criteria, and a positive expected return on token spend. The mandatory post-completion `agent-review` reviewer satisfies this gate by policy and is not blocked by discretionary ROI arguments.
 - Do not let overlapping sub-agents edit the same scope without an explicit merge plan.
 - Do not merge sub-agent output without manager review.
+- Do not default to `production` when the request clearly belongs to `documentation`, `specification-and-plan`, `bugfix`, `review`, `design`, `architecture`, or `post-mortem`.
 - Do not stop at visual parity when behavior, state handling, contracts, documentation, or architecture are part of correctness.
 - Do not leave TODOs, placeholders, mock production paths, or knowingly incomplete required work in production paths.
+- Do not begin a `bugfix` or `hardening` edit before stating the bug, expected behavior, evidence or reproduction, and likely failure surface.
+- Do not invent documentation claims, validation claims, or operational readiness statements that were not directly verified.
 - Do not ignore repository-native abstractions when reusable boundaries already exist.
 - Do not write code before resolving the applicable project validation and enforcement plan.
 - Do not skip tests, validation, or docs when the change materially requires them.
@@ -76,27 +106,31 @@ Mode intent:
 
 Follow this sequence unless the request explicitly narrows scope:
 
-1. Identify the mode and create or update task, review, and report state when the work is implementation-oriented or substantial.
-2. Gather the minimum context needed to stop guessing, including relevant specs, validation commands, and repository rules.
-3. For orchestration modes, consult [references/SUBAGENT_MANAGEMENT.md](references/SUBAGENT_MANAGEMENT.md) and `.agents/evaluations/management.json` if it exists before spawning helpers.
-4. Resolve whether sub-agents improve delivery. The manager must prefer the smallest viable execution shape for implementation and support delegation. Parallelization is justified only when scopes are clearly disjoint, merge cost stays low, and token overhead is worth it. Partitionability alone does not justify multiple workers. This minimization rule does not suppress the mandatory post-completion `agentic-self-review` reviewer.
-5. Implement or review with repository-native patterns. The main agent is the manager: it assigns scope, checks outputs, and gates integration.
-6. Validate behavior, design, static analysis, tests, and repository-native enforcement using the project workflow.
-7. Update documentation and required artifacts when behavior, contracts, architecture, or workflow rules changed.
-8. State completion only when the implementation or design work is actually complete for the chosen mode.
-9. For `production`, `hardening`, `prototype`, `design`, and `architecture`, immediately run an independent `agentic-self-review` per [references/WORKFLOWS.md](references/WORKFLOWS.md). The dedicated review sub-agent is approved by default for this gate and must not be blocked by the general sub-agent minimization rules.
-10. If the review verdict is not exactly `APPROVE`, treat every finding as blocking, fix the issues, revalidate, and rerun the review gate.
-11. Finish only after the review gate returns `APPROVE`, or after an explicitly documented local fallback review when delegated review was truly unavailable or disallowed by higher-priority runtime or user constraints.
+1. Identify or infer the mode from the task intent and create or update task, review, and report state when the work is substantial.
+2. Gather the minimum context needed to stop guessing, including the source intent, relevant specs, validation commands, repository rules, and affected artifacts.
+3. For `bugfix` and `hardening`, restate the bug, expected behavior, evidence or reproduction, likely failure surface, and minimum safe repair before editing.
+4. For `specification-and-plan`, detect whether repo-native spec tooling exists. Use it when present. When absent, recommend adding one, allow the user to continue, record the decision, and carry the reminder into the final output.
+5. For orchestration modes, consult [references/SUBAGENT_MANAGEMENT.md](references/SUBAGENT_MANAGEMENT.md) and `.agents/evaluations/management.json` if it exists before spawning helpers.
+6. Resolve whether sub-agents improve delivery. The manager must prefer the smallest viable execution shape and use the compact packet contracts from [references/SUBAGENT_MANAGEMENT.md](references/SUBAGENT_MANAGEMENT.md). Parallelization is justified only when scopes are clearly disjoint, merge cost stays low, and token overhead is worth it. Partitionability alone does not justify multiple workers. This minimization rule does not suppress the mandatory post-completion `agent-review` reviewer.
+7. Implement, review, document, spec, or analyze with repository-native patterns. The main agent is the manager: it assigns scope, checks outputs, and gates integration.
+8. Validate behavior, design, static analysis, tests, documentation truthfulness, and repository-native enforcement using the project workflow.
+9. Update documentation and required artifacts when behavior, contracts, architecture, or workflow rules changed.
+10. State completion only when the work is actually complete for the chosen mode.
+11. For `production`, `bugfix`, `hardening`, `prototype`, `design`, `documentation`, `specification-and-plan`, and `architecture`, immediately run an independent `agent-review` per [references/WORKFLOWS.md](references/WORKFLOWS.md). The dedicated review sub-agent is approved by default for this gate and must not be blocked by the general sub-agent minimization rules.
+12. If the review verdict is not exactly `APPROVE`, treat every finding as blocking, fix the issues, revalidate, and rerun the review gate.
+13. Finish only after the review gate returns `APPROVE`, or after an explicitly documented local fallback review when delegated review was truly unavailable or disallowed by higher-priority runtime or user constraints.
+14. When the work required multiple corrective prompts, repeated re-scoping, or user dissatisfaction, recommend `post-mortem` mode and run it when the user asks.
 
 Detailed workflow rules live in [references/WORKFLOWS.md](references/WORKFLOWS.md) and [references/SUBAGENT_MANAGEMENT.md](references/SUBAGENT_MANAGEMENT.md).
 
 ## Token and context discipline
 
 - The manager must provide each sub-agent only the minimum context required for its task.
+- Use the compact manager-to-worker and manager-to-reviewer packet contracts from [references/SUBAGENT_MANAGEMENT.md](references/SUBAGENT_MANAGEMENT.md) instead of freeform narrative when delegation is meaningful.
 - Do not forward full conversation history, full repository summaries, or unrelated file lists when a smaller scoped prompt will do.
 - Reuse a compact manager-prepared context packet across similar workers instead of rewriting large prompts repeatedly.
 - Prefer diffs, file paths, acceptance criteria, and validation commands over long narrative restatements.
-- If delegation overhead exceeds likely delivery gain, do not delegate. This efficiency rule does not override the mandatory post-completion `agentic-self-review` reviewer.
+- If delegation overhead exceeds likely delivery gain, do not delegate. This efficiency rule does not override the mandatory post-completion `agent-review` reviewer.
 - Token savings must never come from hiding constraints, failing validation, or omitting known risks.
 
 ## Alignment gating
@@ -118,11 +152,12 @@ For managed sub-agent work, keep repo-local evaluations under `.agents/evaluatio
 Required behavior:
 
 - prefer the smallest viable execution shape in this order: `no sub-agent`, `read-only scout or evidence-gathering worker`, `single bounded writer`, `parallel bounded writers on disjoint scopes`, `independent reviewer`
-- treat the dedicated `agentic-self-review` reviewer as pre-approved for the mandatory post-completion review gate; do not block it with delegation-overhead heuristics or the smallest-viable-execution preference
+- treat the dedicated `agent-review` reviewer as pre-approved for the mandatory post-completion review gate; do not block it with delegation-overhead heuristics or the smallest-viable-execution preference
 - do not use multiple writing workers when one bounded writer is sufficient
 - prefer read-only discovery workers before write delegation when uncertainty is high
 - parallelization is justified only when the scopes are clearly disjoint and merge cost stays low
 - consult the management file before spawning helpers when it exists
+- use the compact packet contracts from [references/SUBAGENT_MANAGEMENT.md](references/SUBAGENT_MANAGEMENT.md) for meaningful worker and reviewer prompts
 - update it after each meaningful sub-agent run
 - track quality by agent type and prompt pattern
 - keep at most 20 entries in `recentRuns` and compress before adding another entry beyond that limit
@@ -177,8 +212,9 @@ Rules:
 - Review frontmatter must include `id`, `name`, `short-description`, `review-count`, `github-pr-number`, `github-pr-link`, `created-at`, `updated-at`, and `state`.
 - The markdown body title must be `# REVIEW_ID - REVIEW_NAME`.
 - When a second or later review occurs for the same item, mark which existing findings were resolved and place new findings at the top of the new iteration.
-- `general-review`, `pr-review`, and `agentic-self-review` use the standard in [references/REVIEW_INSTRUCTIONS.md](references/REVIEW_INSTRUCTIONS.md).
-- Post-completion `agentic-self-review` is normally delegated to a separate sub-agent. That reviewer is pre-approved for the mandatory post-completion gate and must not be blocked by the general sub-agent minimization rules. Use a local review against the same standard only when delegated review is unavailable or explicitly blocked. It does not create a markdown artifact unless explicitly requested.
+- `general-review`, `pr-review`, `agent-review`, and the compatibility alias `agentic-self-review` use the standard in [references/REVIEW_INSTRUCTIONS.md](references/REVIEW_INSTRUCTIONS.md).
+- Post-completion `agent-review` is normally delegated to a separate sub-agent. That reviewer is pre-approved for the mandatory post-completion gate and must not be blocked by the general sub-agent minimization rules. Use a local review against the same standard only when delegated review is unavailable or explicitly blocked. It does not create a markdown artifact unless explicitly requested.
+- If a delegated review packet omits the required intent source, relevant governing references, or material validation context, the reviewer must block the work instead of guessing.
 - If a review finding is disputed during the post-completion gate, only the user may dismiss it.
 - Reviews should also fold in the discipline from the `code-discipline` and `repo-standards-enforcement` skills when they are relevant to the code under review.
 
@@ -196,6 +232,10 @@ Rules:
 - `design` mode replaces the old `design-only` mode.
 - When a Figma specification is available, use Figma MCP first.
 - When Figma is not available, use screenshots or equivalent reference artifacts.
+- For `documentation`, derive claims from code, validated behavior, committed artifacts, or explicitly cited evidence. Unknowns must remain explicit unknowns.
+- For `specification-and-plan`, prefer an existing spec-driven workflow such as Speckit, Speckitty, Symfony, or an equivalent repo-native system. When none exists, recommend adding one without blocking the user from continuing.
+- For `bugfix` and `hardening`, capture the failing behavior and acceptance target before implementation, then verify the fix against that target after implementation.
+- For `post-mortem`, recommend concrete improvements in four buckets when relevant: skills, documentation, agent or instruction files, and MCP or tooling additions. Also explain how a tighter prompt would have produced a more precise or more efficient outcome.
 - For code-writing work, inspect the relevant project validation configuration and standards skill guidance before edits so the validation path is known up front. Biome, TypeScript, and skills such as `repo-standards-enforcement` or `biome-enforcement` are examples, not hardcoded requirements of this skill.
 - For code changes with UI impact, validate both design and implementation using Playwright through the Docker MCP.
 - Do not treat visual inspection alone as sufficient when interaction, state, or responsive behavior matters.
@@ -233,7 +273,7 @@ Documentation is mandatory when:
 
 Update the smallest correct documentation surface. Do not leave stale docs behind.
 
-## Mandatory self-review gate
+## Mandatory agent-review gate
 
 Before concluding any task, verify all applicable items:
 
@@ -244,9 +284,10 @@ Before concluding any task, verify all applicable items:
 - review and report artifacts were updated when required by mode
 - design and implementation were both validated when UI work was involved
 - the post-completion review gate ran with the correct independence rules
+- the delegated review packet included the real source intent, relevant governing references, and material validation results
 - management evaluations and durable learnings were updated when sub-agents were used
 
-For `production`, `hardening`, `prototype`, `design`, and `architecture`, this self-review gate is mandatory after completion has been stated. Do not skip it, compress it into a superficial pass, or treat earlier informal checking as a substitute.
+For `production`, `bugfix`, `hardening`, `prototype`, `design`, `documentation`, `specification-and-plan`, and `architecture`, this gate is mandatory after completion has been stated. Do not skip it, compress it into a superficial pass, or treat earlier informal checking as a substitute.
 
 If any answer is no, continue working or report the exact blocker.
 

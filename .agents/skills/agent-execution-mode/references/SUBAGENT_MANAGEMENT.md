@@ -9,10 +9,17 @@ Use this reference whenever `agent-execution-mode` is active and the agent is co
 It is mandatory for:
 
 - `production`
+- `bugfix`
 - `hardening`
 - `prototype`
 - `design`
+- `documentation`
+- `specification-and-plan`
 - `architecture`
+
+It is also recommended for:
+
+- `post-mortem`
 
 It may also be applied in review modes when parallel evidence gathering is safe and useful.
 
@@ -31,7 +38,7 @@ The manager must still prefer the smallest viable execution shape for implementa
 One bounded writer is preferred over parallel writers unless there is a clear delivery advantage with low integration cost.
 Partitionability alone does not justify multiple workers.
 Do not spawn helpers for trivial tasks, single-file edits with no meaningful parallel split, or tightly coupled work where delegation would create more churn than speed.
-These minimization rules do not suppress the mandatory post-completion `agentic-self-review` reviewer.
+These minimization rules do not suppress the mandatory post-completion `agent-review` reviewer.
 
 ## Delegation preference ladder
 
@@ -59,7 +66,7 @@ Required behavior:
 - choose agent type and prompt pattern deliberately
 - give each worker a bounded task, explicit acceptance criteria, and a stop condition
 - give each worker only the minimum context required and reuse a compact manager-prepared context packet when multiple workers need the same scoped inputs
-- include the original user prompt, clarified intent, repository rules, files in scope, validation plan, and known risks in the prompt
+- include the source intent, clarified intent, repository rules, files in scope, validation or evidence plan, and known risks in the prompt
 - prevent overlapping write ownership unless one worker is read-only
 - review every result before merging or approving it
 - acknowledge strong outcomes briefly
@@ -67,19 +74,29 @@ Required behavior:
 
 Do not use adversarial language. Escalate by increasing specificity, constraint density, and evidence.
 
-## Required prompt payload
+## Manager to worker packet contract
 
-Every meaningful worker prompt should include:
+Every meaningful worker prompt should use tagged markdown sections in this exact order:
 
-- the original user prompt
-- clarified requirements and accepted assumptions
-- the active mode
-- applicable skills, standards, or design references
-- files or directories in scope
-- the validation commands the worker must respect
-- explicit ownership boundaries
-- approval criteria
-- reporting expectations
+1. `# Mode`
+2. `# Intent Source`
+3. `# Task`
+4. `# Scope`
+5. `# Governing References`
+6. `# Validation Or Evidence Plan`
+7. `# Acceptance Criteria`
+8. `# Stop Conditions`
+
+Rules:
+
+- `# Mode`: the active mode.
+- `# Intent Source`: if a specification exists, include its exact path and any accepted plan or task files that matter. If no specification exists, include the original prompt or a compact faithful summary with the real goal and concrete specifics.
+- `# Task`: one short paragraph or up to 5 bullets.
+- `# Scope`: bounded files, directories, or artifacts. Keep it compact.
+- `# Governing References`: only the applicable rules, skills, and artifacts. Include `code-discipline` and `repo-standards-enforcement` when code changes are in scope and those checks are relevant.
+- `# Validation Or Evidence Plan`: for code work include commands. For non-code work include the evidence sources that support the resulting claims.
+- `# Acceptance Criteria`: the exact conditions the worker must satisfy.
+- `# Stop Conditions`: when the worker must hand control back to the manager instead of guessing.
 
 Do not hide failing validation, known defects, or unresolved assumptions from the worker.
 Do not forward unrelated repository context when a smaller packet is sufficient.
@@ -102,15 +119,15 @@ Rules:
 - Do not restate the entire prompt in the response.
 - The manager is responsible for integration and final synthesis.
 
-## Independent self-review gate
+## Independent agent-review gate
 
-Post-completion self-review requires an independent reviewer by default. The dedicated `agentic-self-review` reviewer is pre-approved and must not be blocked by the general sub-agent minimization rules.
+Post-completion review requires an independent reviewer by default. The dedicated `agent-review` reviewer is pre-approved and must not be blocked by the general sub-agent minimization rules.
 
-These packet rules apply only to delegated manager to reviewer communication for `agentic-self-review`. They do not replace the full human-facing review formats used by `general-review`, `pr-review`, or local fallback review.
+These packet rules apply only to delegated manager to reviewer communication for `agent-review` and its compatibility alias `agentic-self-review`. They do not replace the full human-facing review formats used by `general-review`, `pr-review`, or local fallback review.
 
 Rules:
 
-1. Spawn a dedicated reviewer using `agentic-self-review` for the mandatory post-completion gate.
+1. Spawn a dedicated reviewer using `agent-review` or the compatibility alias `agentic-self-review` for the mandatory post-completion gate.
 2. Do not treat this reviewer as optional because of delegation-overhead heuristics, smallest-viable-execution preference, or conservative anti-parallelism rules.
 3. Use the compact packet contract below. Do not send freeform narrative when the packet will do.
 4. Tell the reviewer to act as the final reviewer and not to modify code.
@@ -128,22 +145,24 @@ Use tagged markdown sections in this exact order. Keep the packet compact and op
 Required sections:
 
 1. `# Mode`
-2. `# Task`
-3. `# Repo Root`
-4. `# Review Target`
-5. `# Governing References`
-6. `# Acceptance Basis`
-7. `# Changed Scope`
-8. `# Validation Digest`
-9. `# Review Focus`
+2. `# Intent Source`
+3. `# Task`
+4. `# Repo Root`
+5. `# Review Target`
+6. `# Governing References`
+7. `# Acceptance Basis`
+8. `# Changed Scope`
+9. `# Validation Digest`
+10. `# Review Focus`
 
 Section rules:
 
-- `# Mode`: must state `agentic-self-review`.
+- `# Mode`: must state `agent-review` or `agentic-self-review`.
+- `# Intent Source`: if a spec exists, include the exact spec path and the accepted plan or task files when they matter. If the work was prompt-driven, include the original prompt or a compact faithful summary with the actual goal and concrete specifics. Missing or selectively framed intent is invalid and must produce `BLOCK`.
 - `# Task`: one short paragraph or up to 3 bullets describing what was completed and what the reviewer is verifying now.
 - `# Repo Root`: single path only.
 - `# Review Target`: state whether the reviewer should inspect changed files, diff, feature folder, or another bounded target.
-- `# Governing References`: only the applicable spec, plan, task, repo-rule, or instruction references.
+- `# Governing References`: only the applicable spec, plan, task, repo-rule, or instruction references. Include `code-discipline` and `repo-standards-enforcement` when code changes are in scope and those checks are relevant.
 - `# Acceptance Basis`: only the completion claims or contracts that the review must verify.
 - `# Changed Scope`: up to 12 bullets listing the main changed files or bounded areas.
 - `# Validation Digest`: up to 10 entries. For each entry include command identity and outcome. Include raw output only for failing or disputed commands.
@@ -160,7 +179,7 @@ Do not include:
 Manager packet requirements:
 
 - Do not dump unrelated repo context into the review prompt.
-- Do not omit known failures, disputed areas, or incomplete validation.
+- Do not omit known failures, disputed areas, incomplete validation, or material evidence used to justify completion.
 - Prefer file paths, commands, and bounded claims over narrative explanation.
 - Keep the packet complete enough for integrity, but compressed enough to avoid waste.
 
@@ -191,7 +210,8 @@ Each blocker entry must use this fixed field set:
 Reviewer response requirements:
 
 - Do not restate the full manager packet.
-- Do not emit severity summaries, risk sections, architecture essays, or action buckets in delegated `agentic-self-review`.
+- Do not emit severity summaries, risk sections, architecture essays, or action buckets in delegated `agent-review`.
+- If the packet is materially incomplete, selectively framed, or missing required governing references, return `BLOCK` with `type: contract` or `type: repo-rules`.
 - Treat every finding as blocking regardless of category.
 - Keep coverage factual and bounded.
 - Keep findings operational and remediation-oriented.

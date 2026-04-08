@@ -1,5 +1,10 @@
 # Mode
-agentic-self-review
+agent-review
+
+# Intent Source
+- Spec: /absolute/path/to/repository/docs/specifications/011-example/spec.md
+- Plan: /absolute/path/to/repository/docs/specifications/011-example/plan.md
+- Tasks: /absolute/path/to/repository/docs/specifications/011-example/tasks.md
 
 # Task
 - Re-review completed feature work after remediation.
@@ -16,6 +21,8 @@ agentic-self-review
 - /absolute/path/to/repository/docs/specifications/011-example/spec.md
 - /absolute/path/to/repository/docs/specifications/011-example/plan.md
 - /absolute/path/to/repository/docs/specifications/011-example/tasks.md
+- /absolute/path/to/repository/.agents/skills/code-discipline/SKILL.md
+- /absolute/path/to/repository/.agents/skills/repo-standards-enforcement/SKILL.md
 - /absolute/path/to/repository/.agents/skills/agent-execution-mode/references/REVIEW_INSTRUCTIONS.md
 
 # Acceptance Basis
