@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.6.0](https://github.com/mwillbanks/agent-skills/compare/1.5.0...1.6.0) (2026-04-08)
+
+
+### Features
+
+* **agent-execution-mode:** add more modes, alias and tighten ([f80f666](https://github.com/mwillbanks/agent-skills/commit/f80f6661667a69d8585a93883d479bdcf3abf17f))
+
 # [1.5.0](https://github.com/mwillbanks/agent-skills/compare/1.4.2...1.5.0) (2026-04-02)
 
 
