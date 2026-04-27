@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.7.0](https://github.com/mwillbanks/agent-skills/compare/1.6.0...1.7.0) (2026-04-27)
+
+
+### Features
+
+* **skills:** skill updates ([d56c920](https://github.com/mwillbanks/agent-skills/commit/d56c9208f1eb5f9fc32afd847fc420b0b7b0bb98))
+
 # [1.6.0](https://github.com/mwillbanks/agent-skills/compare/1.5.0...1.6.0) (2026-04-08)
 
 
