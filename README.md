@@ -63,22 +63,39 @@ The exact contents will evolve over time.
 The important thing is that every skill exists to solve a real problem where agents commonly behave poorly.
 
 Current active skill index is maintained in `.agents/SKILLS_INDEX.md`.
+This repository's own specification-governed delivery artifacts live under `.specify/`.
 
 ## Current active skills
 
-- `agent-execution-mode`: enforces end-to-end completion, validation, and independent self-review.
+- `agent-execution-mode`: enforces end-to-end completion, repository-aware SDD alignment, validation, and a mandatory independent `agent-review` gate when available.
 - `execution-alignment-gate`: forces bounded clarification when ambiguity would cause rework or wrong-path execution.
 - `repo-standards-enforcement`: keeps work aligned with repository-native tooling, tests, and maintainability rules.
 - `biome-enforcement`: keeps Biome as the final remediation and enforcement pass.
 - `code-discipline`: blocks helper sprawl, wrapper churn, and unnecessary abstractions.
-- `speckit-feature-orchestrator`: manages a full Speckit workflow from feature discussion through implementation-ready artifacts.
+- `speckit-feature-orchestrator`: manages a full Speckit workflow from feature discussion through implementation-ready artifacts when Speckit is actually the repo's workflow or explicitly requested.
+- `review-remediation-gate`: closes review findings with evidence-backed remediation instead of narrative closure claims.
+- `requirements-traceability-matrix`: maps requirements to implementation, tests, docs, validation, and review proof.
+- `spec-change-governance`: updates existing spec artifacts in place when requirements change instead of rewriting history.
+- `frontend-system-discipline`: enforces design-system, theme-token, composition, and styling-surface rigor for frontend work.
+- `skill-creator`: creates and improves skills through the full draft, test, viewer, human-feedback, and iteration loop instead of stopping at eval-definition artifacts.
 
-The Speckit skill is intended for feature-definition work, not direct code implementation. It supports:
+The Speckit skill is conditional, not the default planning path. It is intended for feature-definition work only when the repository already uses Speckit or the prompt explicitly asks for Speckit. It supports:
 
 - `iterate` mode for discussing and refining a feature before execution
 - `direct` mode for running the full Speckit flow in one managed pass
 
-Use it when you want the agent to take a feature from rough idea to constitution/specification/clarification/plan/tasks/analyze artifacts with management-agent oversight.
+Use it when you want the agent to take a feature from rough idea to constitution/specification/clarification/plan/tasks/analyze artifacts with management-agent oversight in a confirmed Speckit workflow.
+
+## Specification workflow
+
+This repository uses `.specify/` for its own feature-governed work so specification, planning, validation, review, traceability, and post-mortem artifacts stay together.
+
+Use `.specify/` when work needs:
+
+- a governing feature spec and plan before edits
+- update-in-place requirement changes instead of rewritten history
+- spec-local review, validation, traceability, and post-mortem artifacts
+- a single truth surface for feature execution state
 
 ---
 
@@ -129,11 +146,26 @@ Agents should adapt to the repository rather than invent their own rules.
 Skills are organized under the `.agents` directory.
 
 ```text
+.specify/
+  constitution.md
+  features/
+    <feature-id>/
+      feature-foundation.md
+      spec.md
+      plan.md
+      tasks.md
+      findings-closure.md
+      validation.md
+      review.md
+      traceability.md
+      post-mortem.md
+
 .agents/
   prompts/
   skills/
     <skill-name>/
       SKILL.md
+      evals/
       assets/
       references/
 ```
@@ -144,6 +176,9 @@ Each skill is self‑contained and defines:
 - what behaviors it enforces
 - what validation expectations exist
 - what failure patterns it prevents
+- how it is evaluated when evals are present
+
+For skill authoring in this repository, `evals/evals.json` is only the starting point when evaluation is in scope. The expected loop is: define test cases, run them, generate the review viewer, get human feedback, and iterate. Do not treat “eval coverage exists” as proof that the skill was actually evaluated.
 
 Supporting templates belong in `assets/` and supporting documentation belongs in `references/`.
 
@@ -206,4 +241,6 @@ This repository uses release-it for versioning and GitHub releases.
 
 - `bun test` validates all skills against the Agent Skills specification.
 - `bun run skills:validate` validates all skills against the Agent Skills specification.
+- `bun run specify:validate` validates required `.specify/` artifacts.
+- `bun run skills:validate-evals` validates required skill eval definitions.
 - `bun run release` runs release-it and creates a GitHub release.

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This file defines how to choose between `iterate` and `direct` modes and how to behave in each.
+This file defines how to choose between `iterate` and `direct` modes and how to behave in each after the eligibility gate confirms that Speckit is the intended workflow.
 
 ## Iterate mode
 
@@ -69,6 +69,8 @@ Signals:
 * infer what is missing without unnecessary back and forth
 * construct the foundation immediately
 * execute the workflow with strong management oversight
+* preserve and update existing spec artifacts on rework instead of replacing them
+* keep clarification bounded to a 3 to 10 round window when direct mode still needs ambiguity resolution
 
 ## Defaulting behavior
 

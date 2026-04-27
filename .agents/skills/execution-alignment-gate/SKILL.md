@@ -1,6 +1,6 @@
 ---
 name: execution-alignment-gate
-description: Detects materially ambiguous or under-specified requests, selects the right clarification target, and enforces bounded alignment before execution. Use when ambiguity could cause wrong deliverables, wrong scope, wrong implementation path, avoidable rework, or token waste from repeated follow-up.
+description: Detects materially ambiguous or under-specified requests, selects the right clarification target, and enforces bounded alignment before execution, including spec-governed continuations and approval-gated manager handoffs. Use when ambiguity could cause wrong deliverables, wrong scope, wrong implementation path, avoidable rework, or token waste from repeated follow-up.
 license: Apache-2.0
 metadata:
   author: Mike Willbanks
@@ -74,6 +74,7 @@ Follow this sequence:
 ## Required behaviors
 
 * Clarify only when answers materially affect execution.
+* Treat approved spec or plan updates as governing context; do not reopen alignment for the same decision unless a new material contradiction appears.
 * Prefer safe defaults when ambiguity is minor and risk is low.
 * Use short assumption blocks when proceeding under defaults, refusal, or unattended fallback.
 * For manager escalation, use the compact blocked packet in [assets/TEMPLATE_MANAGER_PACKET.md](assets/TEMPLATE_MANAGER_PACKET.md).
@@ -90,6 +91,7 @@ Follow this sequence:
 * Do not use this skill to compensate for ignoring specs, plans, repo rules, or execution mode.
 * Do not ask low-value questions that do not change execution materially.
 * Do not demand approval when it adds no value.
+* Do not ask the user for a manager-owned decision simply because a subagent is approval-gated or unavailable; route through manager mode instead.
 * Do not retain large clarification logs or other garbage that costs more than it saves.
 
 ## Complement to execution mode

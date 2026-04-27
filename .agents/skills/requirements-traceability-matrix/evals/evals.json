@@ -1,0 +1,38 @@
+{
+  "skill_name": "requirements-traceability-matrix",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Trace these requirements to implementation evidence: deterministic error handling, explicit validation, and preserved legacy behavior. Show where each one is covered and what remains open.",
+      "expected_output": "Produces a matrix with discrete requirement IDs, coverage status, evidence, and clear gaps instead of a vague narrative.",
+      "files": [],
+      "expectations": [
+        "Separates distinct requirements into distinct trace rows.",
+        "Includes implementation evidence and validation evidence.",
+        "Highlights any gaps or partial coverage."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "A spec changed midstream and one requirement was superseded by a newer requirement. Build the traceability matrix without losing the old requirement history.",
+      "expected_output": "Keeps superseded requirements visible, marks their status correctly, and preserves the change history in the trace.",
+      "files": [],
+      "expectations": [
+        "Preserves superseded requirements instead of deleting them.",
+        "Marks each requirement with an explicit status.",
+        "Explains the provenance of the newer requirement."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Prove whether the implementation covers all requirements from the plan, the spec, and the test notes. If anything is missing, make the gap obvious.",
+      "expected_output": "Builds a coverage-oriented matrix that ties requirements to artifacts and surfaces missing validation without hiding it.",
+      "files": [],
+      "expectations": [
+        "Maps requirements to artifacts and tests.",
+        "Flags missing or unverified coverage explicitly.",
+        "Does not invent evidence for uncovered items."
+      ]
+    }
+  ]
+}

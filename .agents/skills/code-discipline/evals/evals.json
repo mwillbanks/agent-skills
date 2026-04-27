@@ -1,0 +1,38 @@
+{
+  "skill_name": "code-discipline",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Refactor this endpoint cleanup so it stays readable, but do not create a helper just to wrap `request.query.myVariable?.trim()` or move a single literal into a constants file.",
+      "expected_output": "Keeps trivial normalization inline, rejects meaningless constant extraction, and explains why the simpler structure is the correct one.",
+      "files": [],
+      "expectations": [
+        "Rejects trivial helper extraction for one-line logic.",
+        "Rejects meaningless `constants` extraction for one-off literals.",
+        "Prefers the cleanest truthful variable naming."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "The UI work repeats a number formatting snippet and a date parsing snippet across three files. Decide whether to keep them inline, use a library, or promote a shared helper.",
+      "expected_output": "Prefers a reputable library when appropriate and only introduces a shared helper when reuse and ownership justify it.",
+      "files": [],
+      "expectations": [
+        "Evaluates platform and library options before inventing a helper.",
+        "Promotes shared logic only when reuse is real.",
+        "Avoids generic helper buckets."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "A component has four local styled declarations and one tiny constant used once. Review whether they belong in a separate file or should stay local.",
+      "expected_output": "Keeps one-off constants and local styles colocated unless there is a real ownership or reuse boundary.",
+      "files": [],
+      "expectations": [
+        "Rejects style-file splitting when it adds no ownership value.",
+        "Rejects extracting a one-off constant without shared meaning.",
+        "Reports what stayed inline and why."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "skill_name": "frontend-system-discipline",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Implement a reusable button row for a settings page. Reuse the existing design system and theme tokens, and do not invent new local helpers, constants, or style buckets unless they are genuinely shared.",
+      "expected_output": "Keeps the implementation tied to existing tokens and shared primitives, avoids trivial helper extraction, and only adds new shared structure if reuse is real.",
+      "files": [],
+      "expectations": [
+        "Reuses an existing design-system component or token instead of inventing a new one.",
+        "Keeps one-off helpers or constants inline when they are used once.",
+        "Avoids creating generic helper, constant, or styles buckets for a single consumer."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Refactor a product card so the spacing and color values are consistent across two screens. Keep the theme clean, but do not move one-off values into shared tokens unless they actually represent shared meaning.",
+      "expected_output": "Distinguishes reusable theme values from page-local literals and keeps the code structure simple rather than extracting everything into support files.",
+      "files": [],
+      "expectations": [
+        "Promotes only semantically shared values into the theme.",
+        "Keeps screen-specific values local when reuse is not proven.",
+        "Does not create wrapper components or helper modules that only forward or rename behavior."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review this frontend change: it added a local `styles.ts`, a `constants.ts`, and a helper that only formats a label used once. Tell me whether that structure is disciplined or not.",
+      "expected_output": "Flags the structure as over-extracted, explains which pieces should stay inline or move only if reused, and points to the correct ownership boundary for shared styling or tokens.",
+      "files": [],
+      "expectations": [
+        "Flags trivial helper extraction as non-compliant when it is used once.",
+        "Flags single-consumer constants or style buckets as non-compliant.",
+        "Recommends keeping local style and literal values inline unless reuse or policy value exists."
+      ]
+    }
+  ]
+}

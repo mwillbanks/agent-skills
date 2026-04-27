@@ -1,0 +1,38 @@
+{
+  "skill_name": "execution-alignment-gate",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We already approved the spec update and now I am saying 'continue with the amended plan and finish the implementation.' Decide whether to reopen clarification.",
+      "expected_output": "Treats the approved spec-governed update as governing context and continues without reopening unnecessary clarification.",
+      "files": [],
+      "expectations": [
+        "Recognizes the request as an approved spec-governed continuation.",
+        "Bypasses unnecessary clarification.",
+        "Proceeds under the existing governing artifacts."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "The manager wants to use a reviewer sub-agent but the path is approval-gated. Decide whether this should be pushed back to the user as a new open-ended clarification question.",
+      "expected_output": "Keeps the decision in manager mode instead of turning it into an unnecessary user clarification loop.",
+      "files": [],
+      "expectations": [
+        "Keeps the approval-gated delegation issue in manager mode.",
+        "Does not ask a low-value restatement question.",
+        "Preserves bounded alignment behavior."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "The request is ambiguous about which service owns a new contract and the repo has no approved spec or plan yet. Decide whether clarification is required.",
+      "expected_output": "Still triggers bounded clarification when the ambiguity is material and not already resolved by governing artifacts.",
+      "files": [],
+      "expectations": [
+        "Recognizes a materially ambiguous ownership decision.",
+        "Requests bounded clarification instead of guessing.",
+        "Does not over-trigger on already approved context."
+      ]
+    }
+  ]
+}

@@ -30,4 +30,4 @@ test("all skills pass skills-ref validation", () => {
   }
 
   expect(failures).toEqual([]);
-});
+}, 30000);

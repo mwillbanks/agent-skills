@@ -9,6 +9,7 @@ Bypass for:
 * terse approvals or confirmations tied to the current plan or option set
 * narrow corrective follow-ups whose target is obvious from active context
 * continuation of an already approved plan
+* continuation of an approved spec-governed update
 * safe best-effort defaults that can be stated explicitly without likely harming outcome quality
 * responses that clearly select from options the agent already provided
 

@@ -19,6 +19,7 @@ Resolution rules:
 
 - use `documentation` when the output is documentation, a runbook, prompt guidance, or an explanation aligned to the current project state
 - use `specification-and-plan` when the output is a spec, plan, tasks, RFC, or implementation workflow before coding
+- use `spec-driven-delivery` when implementation must stay governed by an existing repository-native spec, plan, task, ticket, or equivalent packet and the work must preserve prior completed history instead of replacing it
 - use `bugfix` when the task centers on broken behavior, regressions, failing tests, or defect correction
 - use `hardening` when the task centers on closing repeated correctness gaps, abuse cases, reliability gaps, or repeated regressions
 - use `agent-review`, `general-review`, or `pr-review` when the primary output is review rather than implementation
@@ -26,9 +27,36 @@ Resolution rules:
 - use `design` or `architecture` when visual correctness or system decision-making is the main deliverable
 - use `production` only when the task is implementation-oriented and no more specific mode clearly fits
 
+## Repository-aware SDD detection workflow
+
+Before creating or updating governed planning artifacts, detect the repository's existing SDD workflow shape instead of assuming a named tool.
+
+Inspect these signal families:
+
+- spec-like artifacts: `spec.md`, `prd.md`, design docs, ADRs, RFCs, OpenAPI, architecture docs, or decision logs
+- planning artifacts: `plan.md`, implementation plans, migration plans, architecture packets, or technical notes
+- task decomposition: `tasks.md`, checklists, tickets, issue trackers, milestones, or backlog exports
+- tool or workspace directories: `.specify`, `.kiro`, `.augment`, `.cursor`, or equivalent repository-owned workflow directories
+- CI or enforcement signals: validations, policies, or templates that expect specific planning, review, or closeout artifacts
+- repo docs, agent instructions, or scripts that describe a durable planning workflow
+
+Classify the workflow before execution:
+
+- `structured`: a clear end-to-end SDD workflow already exists. Follow it and extend it without breaking conventions.
+- `partial`: some durable planning artifacts exist, but stages are missing. Fill the missing stages conservatively and keep naming, placement, and terminology aligned to what already exists.
+- `absent`: no meaningful SDD workflow exists. Bootstrap a minimal lightweight structure that fits the repository's norms and the user's request.
+
+Rules:
+
+- Speckit-specific behavior is allowed only when Speckit is clearly in use or explicitly requested.
+- Internal normalization into stages such as spec, clarify, plan, tasks, analyze, implementation, validation, and delivery is allowed, but external artifacts must map back to the repository's actual structure.
+- Do not rename, relocate, or replace existing artifacts just to fit a preferred workflow.
+
 ## Task workflow
 
-Use task tracking for implementation-oriented work, bugfix work, documentation work with durable deliverables, specification work with active execution, architecture work with active execution, and any large task that benefits from durable state.
+Use the repository's existing task-tracking surface when one already exists. The `.agents/tasks/` layout below is the default fallback for implementation-oriented work, bugfix work, documentation work with durable deliverables, specification work with active execution, architecture work with active execution, and any large task that benefits from durable state when the repository has no clearer task-tracking convention.
+
+For `spec-driven-delivery`, update the governing SDD artifacts in place. Preserve completed history, do not replace a governing artifact with a fresh rewrite, and keep the artifact routing tied to the same source packet throughout the delivery.
 
 Required files:
 
@@ -58,7 +86,7 @@ Suggested task states:
 
 ## Review workflow
 
-Use review tracking for `general-review` and `pr-review`. `agent-review` and its compatibility alias `agentic-self-review` use the same review standard but do not create a markdown artifact unless explicitly required.
+Use the repository's existing review surface when one already exists. The `.agents/reviews/` layout below is the default fallback for `general-review` and `pr-review`. `agent-review` and its compatibility alias `agentic-self-review` use the same review standard but do not create a markdown artifact unless explicitly required.
 
 Required files:
 
@@ -79,6 +107,8 @@ Rules:
 - New findings for the current iteration go at the top of the current iteration block.
 - Re-reviewing without resolving or reclassifying previous findings is sloppy and invalidates the artifact.
 - Post-completion `agent-review` iterations should still be recorded in task or report state, even when no review artifact exists.
+- For `spec-driven-delivery`, a changed-surface review is allowed for intermediate remediation, but the final gate must be a full-scope review of the governing repository-native packet, implementation, validation evidence, and mandatory post-mortem closeout.
+- Do not use a changed-surface review as a substitute for the final full-scope gate.
 
 Suggested review states:
 
@@ -111,7 +141,7 @@ Review states to use for GitHub summary comments:
 
 ## Report workflow
 
-Use reports for substantial implementation, architecture, or multi-step review work.
+Use the repository's existing reporting surface when one already exists. The `.agents/reports/` layout below is the default fallback for substantial implementation, architecture, or multi-step review work.
 
 Required files:
 
@@ -165,6 +195,7 @@ The following modes permit managed sub-agent orchestration when the expected del
 - `design`
 - `documentation`
 - `specification-and-plan`
+- `spec-driven-delivery`
 - `architecture`
 - `post-mortem`
 
@@ -249,10 +280,11 @@ For `documentation`:
 
 For `specification-and-plan`:
 
-1. Detect repo-native or organization-native spec tooling first.
-2. Prefer that workflow when present, such as Speckit, Speckitty, Symfony, or another established system.
-3. If no spec workflow exists, recommend adding one, allow the user to continue, and record the decision in task or report state.
-4. Produce durable artifacts that a later implementation pass can use directly.
+1. Detect the repository's existing SDD workflow shape first using the signal families above.
+2. If the workflow is `structured`, follow it and extend it without breaking conventions.
+3. If the workflow is `partial`, fill missing stages conservatively and keep naming, placement, and terminology aligned to the repository.
+4. If the workflow is `absent`, bootstrap a minimal lightweight structure that fits the repository and task. Do not introduce Speckit unless Speckit is clearly intended or explicitly requested.
+5. Produce durable artifacts that a later implementation pass can use directly.
 
 ## Post-mortem workflow
 
@@ -274,6 +306,7 @@ The following modes must run `agent-review` after completion has been stated:
 - `design`
 - `documentation`
 - `specification-and-plan`
+- `spec-driven-delivery`
 - `architecture`
 
 Rules:

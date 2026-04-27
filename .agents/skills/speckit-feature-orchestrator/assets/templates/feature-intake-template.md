@@ -18,6 +18,8 @@ Use this template to build the feature foundation before execution.
 
 ## Constraints And Repository Boundaries
 
+## Existing Spec Artifacts To Preserve Or Update On Rework
+
 ## Architectural Guidance
 
 ## API Or Interface Guidance

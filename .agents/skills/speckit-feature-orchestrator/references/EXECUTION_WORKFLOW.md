@@ -2,7 +2,9 @@
 
 ## Overview
 
-The management agent owns continuity, validation, and remediation across the entire Speckit flow.
+This workflow applies only after the eligibility gate confirms that Speckit is the intended repository workflow.
+
+The management agent owns continuity, validation, remediation, and artifact history across the entire Speckit flow.
 
 Subagents may execute the individual skills, but they do not own workflow correctness.
 The management agent does.
@@ -16,6 +18,8 @@ The management agent does.
 5. Generate tasks
 6. Run analyze loop
 7. Return final summary
+
+When reworking an existing feature, update the existing spec artifacts in place and preserve prior completed work unless no valid artifact exists to amend.
 
 ## Step expectations
 
@@ -118,4 +122,5 @@ Purpose:
 * every step is blocked on validation
 * weak output must be remediated before continuing
 * clarification decisions should be made decisively when context supports them
+* existing spec artifacts must be amended in place during rework rather than replaced
 * analysis findings must be fully remediated, not merely noted

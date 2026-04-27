@@ -6,16 +6,37 @@ This file provides guidance to AI coding agents (Claude Code, Cursor, Copilot, e
 
 A collection of skills for AI Agents (codex, copilot, claude, etc). Skills are packaged instructions and scripts that extend AI agent capabilities.
 
+This repository also maintains spec-driven delivery artifacts under `.specify/`. When work is governed by a feature spec, update the existing spec, plan, and task artifacts in place rather than replacing them and erasing prior completed context.
+
 ## Creating a New Skill
 
 ### Directory Structure
 
-```
-skills/
-  {skill-name}/           # kebab-case directory name
-    SKILL.md              # Required: skill definition
-    scripts/              # Required: executable scripts
-      {script-name}.sh    # Bash scripts (preferred)
+```text
+.agents/
+  skills/
+    {skill-name}/
+      SKILL.md
+      evals/                  # Recommended when behavior should be regression tested
+        evals.json
+      scripts/                # Optional executable helpers
+        {script-name}.sh
+      references/
+        {reference-name}.md   # Optional progressive-disclosure references
+
+.specify/
+  constitution.md
+  features/
+    {feature-id}/
+      feature-foundation.md
+      spec.md
+      plan.md
+      tasks.md
+      findings-closure.md
+      validation.md
+      review.md
+      traceability.md
+      post-mortem.md
 ```
 
 ### Naming Conventions
@@ -23,6 +44,7 @@ skills/
 - **Skill directory**: `kebab-case` (e.g., `vercel-deploy`, `log-monitor`)
 - **SKILL.md**: Always uppercase, always this exact filename
 - **Scripts**: `kebab-case.sh` (e.g., `deploy.sh`, `fetch-logs.sh`)
+- **Eval file**: `evals/evals.json` when the skill has objective or semi-objective behavior that should be regression tested
 - **Zip file**: Must match directory name exactly: `{skill-name}.zip`
 
 ### SKILL.md Format
@@ -75,6 +97,21 @@ Skills are loaded on-demand — only the skill name and description are loaded a
 - **Use progressive disclosure** — reference supporting files that get read only when needed
 - **Prefer scripts over inline code** — script execution doesn't consume context (only output does)
 - **File references work one level deep** — link directly from SKILL.md to supporting files
+- **Add eval coverage when the skill behavior should be regression checked**
+- **Do not stop at eval definitions** — when using `skill-creator` or doing repo skill work without an explicit user opt-out, `evals/evals.json` is only the setup step. You must continue into the run-and-evaluate loop, surface results to a human with `eval-viewer/generate_review.py` when the environment supports it, and iterate before calling the skill update evaluated.
+
+### Mandatory Skill Evaluation Loop
+
+For new or materially changed skills with objective or semi-objective behavior:
+
+1. Write or update `evals/evals.json`.
+2. Run the test cases, including the correct baseline path when the environment supports it.
+3. Generate the review viewer with `eval-viewer/generate_review.py` before revising the skill.
+4. Collect or read human feedback.
+5. Improve the skill and repeat as needed.
+
+`evals/evals.json` by itself is not evidence that the skill was evaluated.
+If this loop is skipped, the agent must record the exact user opt-out or environment blocker.
 
 ### Script Requirements
 
@@ -99,9 +136,9 @@ zip -r {skill-name}.zip {skill-name}/
 Document these two installation methods for users:
 
 ```bash
-cp -r skills/{skill-name} ~/.agents/skills/
+cp -r .agents/skills/{skill-name} ~/.agents/skills/
 # codex
-cp -r skills/{skill-name} ~/.codex/skills/
+cp -r .agents/skills/{skill-name} ~/.codex/skills/
 # claude
-cp -r skills/{skill-name} ~/.claude/skills/
+cp -r .agents/skills/{skill-name} ~/.claude/skills/
 ```

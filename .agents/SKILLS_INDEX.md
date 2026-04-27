@@ -6,7 +6,7 @@ This index is the single place to discover active skills and expected usage patt
 
 ### agent-execution-mode
 - Path: `.agents/skills/agent-execution-mode/SKILL.md`
-- Purpose: Enforces complete execution, managed sub-agent orchestration, independent self-review gating, validation, and honest reporting.
+- Purpose: Enforces complete execution, managed sub-agent orchestration, repository-aware spec-driven delivery, independent review gating, validation, post-mortem closure, and honest reporting.
 - Use when: Implementing or hardening behavior, running architecture or design work, producing production-grade delivery, or performing review workflows that must be complete and verified.
 
 ### execution-alignment-gate
@@ -29,10 +29,35 @@ This index is the single place to discover active skills and expected usage patt
 - Purpose: Prevents helper/wrapper/abstraction bloat and enforces reuse of platform, framework, and existing utilities.
 - Use when: Adding or refactoring logic where maintainability, reuse, and abstraction discipline matter.
 
+### frontend-system-discipline
+- Path: `.agents/skills/frontend-system-discipline/SKILL.md`
+- Purpose: Enforces design-system, theme-token, composition, constants, and styling-surface discipline for frontend work.
+- Use when: Frontend code, design-system work, MUI styling, or cross-component UI patterns are being created or changed.
+
 ### speckit-feature-orchestrator
 - Path: `.agents/skills/speckit-feature-orchestrator/SKILL.md`
-- Purpose: Orchestrates a full Speckit feature workflow from constitution amendment through specification, clarification, plan, tasks, and analysis using a management-agent model with `iterate` and `direct` modes.
-- Use when: A user wants to discuss and refine a feature first or directly drive it into implementation-ready Speckit artifacts in one controlled pass.
+- Purpose: Orchestrates a full Speckit feature workflow from constitution amendment through specification, clarification, plan, tasks, and analysis using a chief-architect management-agent model with `iterate` and `direct` modes.
+- Use when: A user wants to discuss and refine a feature first or directly drive it into implementation-ready or update-in-place Speckit artifacts in one controlled pass, and Speckit is clearly the repository workflow or explicitly requested.
+
+### review-remediation-gate
+- Path: `.agents/skills/review-remediation-gate/SKILL.md`
+- Purpose: Converts review findings into evidence-backed closure work and blocks narrative-only "fixed" claims.
+- Use when: Work has review findings or blocking comments that must be remediated and closed truthfully.
+
+### requirements-traceability-matrix
+- Path: `.agents/skills/requirements-traceability-matrix/SKILL.md`
+- Purpose: Maps requirements to implementation surfaces, tests, docs, validation, and review evidence.
+- Use when: Broad or high-risk work needs a durable proof surface showing what requirement is satisfied where.
+
+### spec-change-governance
+- Path: `.agents/skills/spec-change-governance/SKILL.md`
+- Purpose: Governs requirement changes in spec-driven workflows so spec, plan, and tasks are updated in place instead of rewritten destructively.
+- Use when: A governed feature changes midstream and the existing specification artifacts must stay truthful.
+
+### skill-creator
+- Path: `.agents/skills/skill-creator/SKILL.md`
+- Purpose: Creates or improves skills through a mandatory draft -> run test cases -> human review -> improve loop when evaluation has not been explicitly skipped.
+- Use when: Creating a new skill, improving an existing skill, benchmarking skill behavior, or running a skill evaluation loop with baseline comparison and human review.
 
 ## Standard Pairing
 
@@ -43,24 +68,34 @@ For most coding tasks, use this standard set together:
 4. `biome-enforcement`
 
 Add `execution-alignment-gate` before execution when ambiguity is material enough to threaten scope, implementation correctness, or validation accuracy.
+Add `frontend-system-discipline` whenever frontend architecture, design tokens, styling organization, or design-system reuse is in scope.
 
 This standard set prevents partial implementations, enforces standards, preserves Biome enforcement discipline, and blocks unnecessary abstraction sprawl while the alignment gate prevents avoidable wrong-path execution.
+
+For skill authoring or skill changes, add `skill-creator` and do not stop at `evals/evals.json`; the run-and-review loop must execute unless the user explicitly opts out.
 
 ## Mode Defaults
 
 - Default mode: `production`
 - Elevated mode: `hardening` when the task is correctness-sensitive or has failed previously.
+- End-to-end spec mode: `spec-driven-delivery` using the repository's existing SDD workflow when it exists
+- Planning mode: `specification-and-plan` using repository-aware SDD detection rather than a forced tool choice
 - Other execution modes:
+  - `bugfix`
   - `prototype`
   - `design`
+  - `documentation`
   - `architecture`
 - Review modes:
+  - `agent-review`
   - `agentic-self-review`
   - `general-review`
   - `pr-review`
+- Analysis mode:
+  - `post-mortem`
 - Retired mode: `recommendation-review` was removed; use `general-review` or `pr-review` instead.
 
-Execution modes `production`, `hardening`, `prototype`, `design`, and `architecture` must run `agentic-self-review` after completion is stated.
+Execution modes `production`, `bugfix`, `hardening`, `prototype`, `design`, `documentation`, `specification-and-plan`, `spec-driven-delivery`, and `architecture` must run an independent final review after completion is stated.
 
 ## Quick Validation Checklist
 
@@ -71,3 +106,4 @@ Before claiming completion, ensure:
 - Biome enforcement was run when the changed scope is Biome-managed.
 - Documentation is updated when behavior or architecture changed.
 - Reported status matches reality.
+- Spec-local artifacts are updated truthfully when the work is spec-governed.

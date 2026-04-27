@@ -1,0 +1,60 @@
+{
+  "skill_name": "speckit-feature-orchestrator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Direct mode: update the existing feature packet for account retention policies to add legal-hold support, but keep the old completed tasks visible and rerun clarification and planning against the amended requirements.",
+      "expected_output": "Uses direct mode, preserves the existing spec history, updates artifacts in place, and reruns the downstream Speckit phases against the amended feature.",
+      "files": [],
+      "expectations": [
+        "Treats existing spec artifacts as the source to amend rather than replace.",
+        "Keeps completed work visible.",
+        "Reruns clarification and planning against the updated requirements."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Direct mode: take this feature from idea to full Speckit artifacts and use enough clarification depth to pressure test hidden constraints before planning.",
+      "expected_output": "Acts as a chief-architect governor and uses a direct-mode clarification window between 3 and 10 rounds when justified.",
+      "files": [],
+      "expectations": [
+        "Frames the management agent as the chief architect.",
+        "Uses a clarification window bounded between 3 and 10 rounds in direct mode.",
+        "Does not accept weak artifacts without validation."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Iterate mode: let's pressure test this feature first, but do not jump into the full execution workflow until I choose to proceed.",
+      "expected_output": "Keeps iterate mode discussion-oriented while preserving the stronger management posture.",
+      "files": [],
+      "expectations": [
+        "Keeps iterate mode human-in-the-loop.",
+        "Does not start the full execution workflow prematurely.",
+        "Still applies strong management validation standards."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Use Speckit for this repo even though it only has ADRs, a PRD, and issue tickets right now, with no `.specify` surface or Speckit references. I want you to detect whether Speckit is actually the right workflow before you proceed.",
+      "expected_output": "Runs the eligibility gate and refuses to impose Speckit when the repository lacks strong Speckit signals.",
+      "files": [],
+      "expectations": [
+        "Checks for Speckit eligibility before execution.",
+        "Does not impose Speckit on a non-Speckit workflow.",
+        "Routes the user toward a repository-aware planning workflow instead."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "The repo already has `.specify/constitution.md`, governed feature packets with spec, plan, and tasks files, and team docs that call this the Speckit flow. Direct mode: take this feature through the full Speckit workflow.",
+      "expected_output": "Confirms Speckit eligibility and then runs the full Speckit flow under chief-architect management.",
+      "files": [],
+      "expectations": [
+        "Confirms the repository has strong Speckit signals.",
+        "Uses direct mode once eligibility is established.",
+        "Keeps the chief-architect management posture across the flow."
+      ]
+    }
+  ]
+}

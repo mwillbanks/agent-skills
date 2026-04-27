@@ -1,0 +1,38 @@
+{
+  "skill_name": "spec-change-governance",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "The product team changed one requirement midstream. Update the spec in place, keep the old requirement visible as superseded, and tell me what downstream artifacts need rerun.",
+      "expected_output": "Amends the spec without deleting the original requirement history and identifies affected follow-on artifacts.",
+      "files": [],
+      "expectations": [
+        "Keeps the old requirement visible.",
+        "Marks the changed requirement as superseded or replaced.",
+        "Calls out downstream artifacts that must be updated."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "A plan is now inconsistent with the spec. Govern the change so the plan, tasks, and validation stay aligned instead of drifting apart.",
+      "expected_output": "Forces downstream consistency and does not allow the mismatch to remain unaddressed.",
+      "files": [],
+      "expectations": [
+        "Identifies the inconsistency explicitly.",
+        "Requires downstream alignment work.",
+        "Does not hide the contradiction."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "We need to revise the requirement, but I do not want the earlier completed tasks erased. Update the workflow carefully and preserve history.",
+      "expected_output": "Preserves completed work, records the amendment, and avoids a destructive rewrite of the spec history.",
+      "files": [],
+      "expectations": [
+        "Preserves completed tasks or prior state.",
+        "Uses in-place amendment rather than replacement.",
+        "Reports any unresolved contradictions or stale artifacts."
+      ]
+    }
+  ]
+}

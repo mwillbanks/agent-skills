@@ -1,6 +1,9 @@
 # Feature: {{FEATURE_NAME}}
 
+Use this template only after confirming that Speckit is the intended workflow for the repository or prompt.
+
 You are the management agent coordinating a multi-step specification and planning workflow for this feature.
+Act as the chief architect governor for the workflow.
 
 Your role is not to directly perform each downstream skill step yourself unless required by the execution environment. Your primary role is to manage subagents, preserve full feature context, enforce constitutional and architectural alignment, validate outputs, remediate issues, and ensure the workflow completes cleanly and sequentially.
 
@@ -22,6 +25,7 @@ You must ensure:
 - each step is completed before the next begins
 - each step is validated before the next begins
 - clarifications are resolved using the full management context
+- existing specification artifacts are updated in place on rework instead of being replaced
 - analysis findings are fully remediated before closing
 - no step is treated as done merely because a skill produced output
 - all outputs remain faithful to the original feature intent and repository boundaries
@@ -145,10 +149,12 @@ Use the skill: `speckit-clarify`
 
 Clarification loop rules:
 - run this loop up to {{CLARIFY_MAX_ROUNDS}} times total
+- if direct mode needs clarification, keep the total clarification window between 3 and 10 rounds inclusive
 - the subagent performs the clarification pass
 - if the subagent needs clarification, it must ask the management agent
 - the management agent answers using full context and prior artifacts
 - the management agent should resolve ambiguity proactively where justified by context
+- when reworking existing artifacts, preserve history by amending them in place
 - after each clarification round, validate the updated specification
 - do not proceed until clarification is complete and the specification is validated
 

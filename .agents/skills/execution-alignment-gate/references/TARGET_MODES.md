@@ -37,6 +37,7 @@ Behavior:
 * return a compact manager packet using [assets/TEMPLATE_MANAGER_PACKET.md](../assets/TEMPLATE_MANAGER_PACKET.md)
 * keep the packet operational, not conversational
 * request only the smallest decision needed to unblock safe execution
+* if a subagent is approval-gated or unavailable, keep the decision in manager mode instead of escalating it to the user unless the decision itself belongs to the user
 
 ## unattended
 

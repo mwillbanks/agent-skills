@@ -396,6 +396,83 @@
         "Provides prompt-improvement guidance.",
         "Recommends concrete repo additions such as skills, docs, agent instructions, or tooling."
       ]
+    },
+    {
+      "id": 37,
+      "prompt": "Spec-driven-delivery mode: finish the feature from the governing spec packet, keep the existing spec, plan, and task history intact, update the artifacts in place, and make the required post-mortem closeout part of completion.",
+      "expected_output": "Chooses spec-driven-delivery, updates governed artifacts in place instead of replacing them, and requires a post-mortem closeout before completion.",
+      "files": [],
+      "expectations": [
+        "Selects spec-driven-delivery mode.",
+        "Preserves spec, plan, and task history by updating governing artifacts in place.",
+        "Requires a mandatory post-mortem closeout before completion."
+      ]
+    },
+    {
+      "id": 38,
+      "prompt": "I need the final independent review on a spec-governed delivery. Tell me whether this is only a changed-surface pass or the mandatory full-scope gate, and do not let a steering packet approve itself.",
+      "expected_output": "Distinguishes intermediate changed-surface review from the mandatory full-scope final gate and rejects steering or selective packets.",
+      "files": [],
+      "expectations": [
+        "States that changed-surface review is only acceptable for intermediate iterations.",
+        "States that the final gate must be a full-scope review of the governed spec packet.",
+        "Rejects approval-seeking or selective packet framing."
+      ]
+    },
+    {
+      "id": 39,
+      "prompt": "A reviewer sub-agent is unavailable right now. Ask for approval to use the documented fallback, wait 90 seconds for delegation to recover, and then continue with the fallback only if it is still unavailable.",
+      "expected_output": "Explains the approval request and 90-second fallback path for unavailable sub-agents.",
+      "files": [],
+      "expectations": [
+        "Requests approval for the documented fallback path.",
+        "Includes a 90-second wait window before falling back.",
+        "Records the exact unavailability constraint."
+      ]
+    },
+    {
+      "id": 40,
+      "prompt": "This review packet is supposed to be authoritative for a spec-driven change. Block it if it leaves out the spec path, validation evidence, or uses a manager summary instead of the real source intent.",
+      "expected_output": "Treats the packet as authoritative only when it includes the governing spec and validation evidence, and blocks selective or manager-steered packets.",
+      "files": [],
+      "expectations": [
+        "Requires the governing spec path in the review packet.",
+        "Requires material validation evidence.",
+        "Blocks selective or manager-steered packets."
+      ]
+    },
+    {
+      "id": 41,
+      "prompt": "Specification-and-plan mode: this repo already uses a PRD in docs/prd.md, ADRs under docs/adr/, an OpenAPI contract, and Jira tickets for execution tracking. Extend that workflow for the new tenant-provisioning feature, but do not introduce Speckit or a foreign folder layout.",
+      "expected_output": "Detects an existing non-Speckit SDD workflow and follows it without imposing Speckit or a new structure.",
+      "files": [],
+      "expectations": [
+        "Selects or infers specification-and-plan mode.",
+        "Detects and follows the existing PRD, ADR, OpenAPI, and ticket workflow.",
+        "Does not introduce Speckit or a foreign artifact layout."
+      ]
+    },
+    {
+      "id": 42,
+      "prompt": "We have a design doc and a rough architecture plan already, but no task breakdown yet. Please use the repo's existing planning style, fill the missing stages conservatively, and keep completed history intact when you add the missing delivery artifacts.",
+      "expected_output": "Treats the repository as a partial SDD workflow, fills the missing stages conservatively, and preserves existing artifacts instead of rewriting them.",
+      "files": [],
+      "expectations": [
+        "Classifies the workflow as partial rather than absent.",
+        "Adds only the missing stages needed for delivery.",
+        "Preserves existing history and artifact placement."
+      ]
+    },
+    {
+      "id": 43,
+      "prompt": "There is no spec workflow in this repo yet. Set up the minimum lightweight planning structure we need for this migration, but do not assume Speckit unless you find strong repo signals that it is intended.",
+      "expected_output": "Bootstraps a lightweight workflow when no SDD structure exists and avoids Speckit unless high-confidence signals support it.",
+      "files": [],
+      "expectations": [
+        "Treats the workflow as absent and bootstraps a minimal structure.",
+        "Avoids introducing Speckit by default.",
+        "Keeps the structure lightweight and aligned to repository norms."
+      ]
     }
   ]
 }

@@ -1,8 +1,8 @@
 ---
 name: speckit-feature-orchestrator
-description: Orchestrates a full Speckit feature workflow from constitution amendment through specification, clarification, plan, tasks, and analysis using a management-agent model with subagents. Use when a user wants to discuss, refine, or directly drive a new feature into implementation-ready Speckit artifacts in one controlled pass.
+description: Orchestrates a full Speckit feature workflow from constitution amendment through specification, clarification, plan, tasks, and analysis as a chief-architect governor using subagents. Use when the repository already uses Speckit or the user explicitly asks for Speckit and wants to discuss, refine, or directly drive a new feature into implementation-ready Speckit artifacts in one controlled pass.
 license: Apache-2.0
-compatibility: Designed for agent environments that support Agent Skills, subagent delegation, structured iterative discussion, and Speckit-style constitution/specify/clarify/plan/tasks/analyze workflows.
+compatibility: Designed for agent environments that support Agent Skills, subagent delegation, structured iterative discussion, and a confirmed Speckit-style constitution/specify/clarify/plan/tasks/analyze workflow.
 metadata:
   author: Mike Willbanks
   repository: https://github.com/mwillbanks/agent-skills
@@ -12,7 +12,7 @@ metadata:
 
 # speckit-feature-orchestrator
 
-Use this skill when the user wants to take a feature from idea through implementation-ready Speckit artifacts in one managed flow.
+Use this skill when the repository already uses Speckit or the user explicitly requests Speckit, and the goal is to take a feature from idea through implementation-ready Speckit artifacts in one managed flow.
 
 This skill supports two modes:
 
@@ -28,6 +28,7 @@ This skill supports two modes:
   * Do not pause for discussion unless a hard blocker exists.
 
 This skill is management-agent centric.
+You are the chief-architect governor of the workflow.
 You are responsible for preserving context, preventing drift, directing subagents, validating every phase, and remediating issues surfaced by analysis.
 
 See:
@@ -40,6 +41,23 @@ See:
 * [Feature intake template](assets/templates/feature-intake-template.md)
 * [Management prompt template](assets/templates/management-agent-prompt.md)
 * [Final summary template](assets/templates/final-summary-template.md)
+
+## Eligibility gate
+
+Before using this skill, confirm that Speckit is actually the intended workflow.
+
+High-confidence signals include:
+
+* repository docs, agent instructions, or automation that explicitly reference Speckit
+* a Speckit-style workflow surface such as `.specify/constitution.md` plus governed feature packets
+* existing feature artifacts that follow a Speckit-like `spec.md`, `plan.md`, and `tasks.md` packet
+* prompts that explicitly ask for Speckit or a constitution/specify/clarify/plan/tasks/analyze flow
+
+If those signals are weak or mixed:
+
+* do not introduce Speckit into the repository
+* do not invent Speckit terminology or structure
+* hand the workflow back to a repository-aware planner such as `agent-execution-mode` in `specification-and-plan`
 
 ## Core operating model
 
@@ -57,6 +75,7 @@ Your responsibilities:
 * keep outputs constitutionally aligned
 * prevent scope drift and contradictory instructions
 * ensure downstream artifacts are implementation ready
+* preserve existing specification history and update artifacts in place on rework
 * fully close the analyze loop before declaring completion
 
 ## Mode selection
@@ -85,10 +104,11 @@ Do not run the full execution workflow until the user chooses `Execute feature s
 
 In direct mode:
 
-1. Infer the missing context from the user request, repository norms, and known architectural constraints.
+1. Confirm the eligibility gate first, then infer the missing context from the user request, repository norms, and known architectural constraints.
 2. Build the feature foundation immediately.
 3. Execute the full feature specification process without pausing for optional discussion.
-4. Only stop early if a true blocker prevents a grounded result.
+4. Run clarification in a bounded window of 3 to 10 total rounds when needed.
+5. Only stop early if a true blocker prevents a grounded result.
 
 ## Feature foundation requirements
 
@@ -109,6 +129,7 @@ The foundation must include:
 * performance and safety expectations
 * testing expectations
 * open assumptions you chose to resolve
+* existing spec artifacts that must be preserved or updated on rework
 
 This foundation is the source of truth for building the downstream prompts.
 
@@ -156,13 +177,13 @@ During clarification:
 * if clarification is needed, the subagent asks the management agent
 * the management agent answers using full workflow context and prior artifacts
 * the management agent should decide grounded ambiguities proactively when enough information exists
+* preserve and amend existing spec artifacts instead of replacing them when rework is needed
 * after each clarification round, validate the specification again
 * do not proceed until the specification is sufficiently clarified and ready for planning
-
-Default clarification rounds: `3`
-
-Increase only when there is substantial justified ambiguity.
-Do not create artificial clarifying churn.
+* default clarification rounds: `3`
+* in direct mode, keep the total clarification window between `3` and `10` rounds inclusive
+* increase only when there is substantial justified ambiguity
+* do not create artificial clarifying churn
 
 ## Analyze loop discipline
 
@@ -220,6 +241,7 @@ The final summary must include:
 * Prefer decisive, grounded judgments over unnecessary open questions.
 * Do not mark a phase complete because a subagent produced output.
 * Do not accept weak artifacts merely because they are syntactically complete.
+* Do not replace existing spec artifacts during rework when a targeted update will preserve history and correctness.
 * Ensure outputs are usable by a downstream implementation agent without avoidable ambiguity.
 
 ## Minimal activation flow

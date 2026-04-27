@@ -15,6 +15,7 @@ It is mandatory for:
 - `design`
 - `documentation`
 - `specification-and-plan`
+- `spec-driven-delivery`
 - `architecture`
 
 It is also recommended for:
@@ -137,6 +138,7 @@ Rules:
 8. Only the user may dismiss a disputed finding.
 9. Fix blockers, rerun affected validation, and repeat the review gate.
 10. If sub-agent review cannot run because runtime or user constraints actually prevent it, use a documented local fallback review and record the exact constraint.
+11. If the reviewer path is unavailable, request approval for the documented local fallback once, wait up to 90 seconds for the delegation path to recover, and then use the fallback only if the same constraint still applies. Record the wait window and the exact reason the reviewer was unavailable.
 
 ### Manager to reviewer packet contract
 

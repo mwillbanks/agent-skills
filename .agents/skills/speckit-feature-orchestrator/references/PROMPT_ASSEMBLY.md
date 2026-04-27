@@ -65,6 +65,7 @@ It should:
 ### `{{CLARIFY_MAX_ROUNDS}}`
 
 Default to `3`.
+In direct mode, clamp the total clarification window to a value between `3` and `10` inclusive.
 Increase only when the feature is unusually ambiguous and additional rounds are justified.
 
 ## Prompt quality rules

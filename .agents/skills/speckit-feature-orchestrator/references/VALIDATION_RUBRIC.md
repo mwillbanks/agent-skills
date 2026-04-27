@@ -9,6 +9,7 @@ Every artifact must be checked for:
 * alignment with original feature intent
 * alignment with current repository constraints
 * alignment with constitution and amendments
+* preservation of existing spec history when the work is a rework
 * completeness for the current phase
 * internal consistency
 * technical feasibility
@@ -57,6 +58,7 @@ Every artifact must be checked for:
 
 * Was every issue resolved?
 * Did fixes preserve original intent?
+* Were existing artifacts amended in place rather than replaced when history needed to be preserved?
 * Did remediation create contradictions elsewhere?
 * Is the workflow now clean enough to hand to implementation?
 

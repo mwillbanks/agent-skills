@@ -1,0 +1,38 @@
+{
+  "skill_name": "review-remediation-gate",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "A review says the pagination fix is incomplete because the code handles the happy path but not empty-state validation or the test coverage. Close the review comments without widening scope unnecessarily.",
+      "expected_output": "Separates the findings, proposes the smallest remediation that closes them, and requires verification before calling the review closed.",
+      "files": [],
+      "expectations": [
+        "Treats the review as a closure task rather than a fresh implementation task.",
+        "Maps each finding to a concrete remediation and verification step.",
+        "Does not claim closure without evidence."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "The reviewer flagged an abstraction as too broad and also noted a missing docs update. Fix both issues and report whether anything is still open.",
+      "expected_output": "Keeps the remediation bounded, addresses the coupled documentation gap, and reports an honest final status for each finding.",
+      "files": [],
+      "expectations": [
+        "Preserves the original findings instead of collapsing them into a summary.",
+        "Requires evidence-backed closure for each item.",
+        "Calls out any unresolved blocker explicitly."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Please close the review on this work, but only if the blocking issue is actually fixed and validated. If it is not, tell me exactly why not.",
+      "expected_output": "Tightens the closure gate, refuses to overstate completion, and distinguishes a real fix from an unverified claim.",
+      "files": [],
+      "expectations": [
+        "Does not mark a finding resolved without validation.",
+        "Distinguishes blocking findings from accepted risk.",
+        "Produces a truthful closure or blocker report."
+      ]
+    }
+  ]
+}
