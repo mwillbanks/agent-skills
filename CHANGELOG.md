@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.8.0](https://github.com/mwillbanks/agent-skills/compare/1.7.0...1.8.0) (2026-04-30)
+
+
+### Features
+
+* **skill:** project tracker skill ([0ee3ade](https://github.com/mwillbanks/agent-skills/commit/0ee3ade2f7d5974a008a2b9bf9db695e111d6009))
+
 # [1.7.0](https://github.com/mwillbanks/agent-skills/compare/1.6.0...1.7.0) (2026-04-27)
 
 
