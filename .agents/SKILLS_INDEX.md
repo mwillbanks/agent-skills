@@ -59,6 +59,11 @@ This index is the single place to discover active skills and expected usage patt
 - Purpose: Creates or improves skills through a mandatory draft -> run test cases -> human review -> improve loop when evaluation has not been explicitly skipped.
 - Use when: Creating a new skill, improving an existing skill, benchmarking skill behavior, or running a skill evaluation loop with baseline comparison and human review.
 
+### project-tracker
+- Path: `.agents/skills/project-tracker/SKILL.md`
+- Purpose: Coordinates ticket-tracking and time-tracking lifecycle operations for active work, including project mapping, task/subtask setup, state transitions, replication, connector installation flow, timer gating by configuration, low-interruption autonomous execution, and closeout logging.
+- Use when: A user starts with `/ProjectTracker`, provides Jira or ClickUp ticket IDs, needs cross-board synchronization, or needs work time bound to project tasks during execution.
+
 ## Standard Pairing
 
 For most coding tasks, use this standard set together:

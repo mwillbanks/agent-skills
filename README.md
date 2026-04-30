@@ -78,6 +78,7 @@ This repository's own specification-governed delivery artifacts live under `.spe
 - `spec-change-governance`: updates existing spec artifacts in place when requirements change instead of rewriting history.
 - `frontend-system-discipline`: enforces design-system, theme-token, composition, and styling-surface rigor for frontend work.
 - `skill-creator`: creates and improves skills through the full draft, test, viewer, human-feedback, and iteration loop instead of stopping at eval-definition artifacts.
+- `project-tracker`: enforces ticket and time-tracking orchestration for `/ProjectTracker` workflows across Jira, ClickUp, and Everhour with setup, in-progress transitions, and closeout logging.
 
 The Speckit skill is conditional, not the default planning path. It is intended for feature-definition work only when the repository already uses Speckit or the prompt explicitly asks for Speckit. It supports:
 

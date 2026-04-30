@@ -1,0 +1,102 @@
+{
+  "skill_name": "project-tracker",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/ProjectTracker Implement rate-limit hardening for auth callbacks and keep tracking synced.",
+      "expected_output": "Prompts for or resolves the active ticket, enforces project map lookup/setup, moves work into progress, applies timer gating from configuration, and defines closeout transitions.",
+      "files": [],
+      "expectations": [
+        "Requires project mapping lookup before implementation.",
+        "Requires ticket resolution or explicit prompt for missing ticket id.",
+        "Requires timer gating by useTimeTracking/enabled flags before any timer start.",
+        "Requires ticket transition and time stop/log on closeout."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "/ProjectTracker AIA-431 Build a new ingestion retry monitor and mirror work to our internal ClickUp board.",
+      "expected_output": "Uses Jira ticket AIA-431 as parent, creates or locates mirrored child ticket in ClickUp when configured, and tracks linkage for later updates.",
+      "files": [],
+      "expectations": [
+        "Routes the provided Jira key to Jira using configured ticket pattern.",
+        "Creates or resolves child tracker ticket when replication is enabled.",
+        "Stores or reuses cross-system ticket linkage.",
+        "Maintains ticket status synchronization through closeout."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "/ProjectTracker SL-7007 Fix PDF upload timeout and log time in Everhour.",
+      "expected_output": "Routes custom-id task to ClickUp, binds the time tracking provider to Everhour when configured and enabled, and records install/fallback behavior if Everhour connector is unavailable.",
+      "files": [],
+      "expectations": [
+        "Routes SL-7007 to ClickUp based on custom id pattern/prefix.",
+        "Attempts Everhour provider before internal fallback.",
+        "Asks permission to install Everhour MCP before attempting install.",
+        "Prefers direct/vendor/self-hosted Everhour MCP and avoids third-party bridge signup by default.",
+        "Attempts connector installation when permission is granted.",
+        "Finishes with explicit time logging outcome."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "/ProjectTracker Create subtasks for API docs, validation tests, and release notes under the active parent ticket and start each one only when work begins.",
+      "expected_output": "Creates scoped subtasks under the active parent item, assigns and transitions each subtask to in progress only when started, and keeps remaining subtasks unstarted.",
+      "files": [],
+      "expectations": [
+        "Uses parent ticket context before creating subtasks.",
+        "Creates multiple subtasks when the work is multi-step.",
+        "Transitions only active subtasks to in progress.",
+        "Keeps non-started subtasks in backlog/todo state."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "/ProjectTracker Use Linear as the client board and Harvest for time tracking for this project. Configure support automatically if not already available.",
+      "expected_output": "Discovers non-built-in provider support, asks permission before MCP install, attempts installation/configuration, and maps provider routing instead of assuming Jira/ClickUp-only behavior.",
+      "files": [],
+      "expectations": [
+        "Does not assume only Jira/ClickUp are supported ticket systems.",
+        "Performs provider capability discovery for configured non-built-in systems.",
+        "Asks permission before installing missing MCP connector.",
+        "Does not auto-select third-party bridge connectors unless the user explicitly opts in.",
+        "Attempts install/configuration when permission is granted.",
+        "Records degraded mode explicitly if install/configuration fails."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "/ProjectTracker AIA-999 Complete the schema migration checklist. Mapping already exists for this repo and ticket id is final.",
+      "expected_output": "Uses existing project map and clear ticket id without asking redundant setup or ticket-detail questions.",
+      "files": [],
+      "expectations": [
+        "Skips setup prompts when mapping already exists for current project.",
+        "Does not ask additional ticket-identity questions when provided key matches configured pattern.",
+        "Proceeds directly to task preparation and execution workflow."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "/ProjectTracker AIA-1001 Move parent ticket and child ticket to In Review and log final time entry now.",
+      "expected_output": "Performs routine transition and time-log actions autonomously without extra end-user confirmation prompts.",
+      "files": [],
+      "expectations": [
+        "Automatically executes routine ticket transition actions when target workflow state is clear.",
+        "Automatically logs/stops time when provider is enabled and configured.",
+        "Avoids unnecessary confirmation prompts for routine tracker/time operations."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "/ProjectTracker Use existing mapping and resolve issue status updates quietly unless a required detail is unknown.",
+      "expected_output": "Runs in low-interruption mode and only asks for user input on real blockers (missing connector, unresolved ticket target, unknown transition).",
+      "files": [],
+      "expectations": [
+        "Applies prompt suppression when context is already complete.",
+        "Asks user input only for unknown/blocked actions.",
+        "Documents platform-imposed approval interruptions as constraints when they cannot be suppressed."
+      ]
+    }
+  ]
+}
