@@ -1,0 +1,34 @@
+{
+  "skill_name": "ts-code-validation-gate",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Use the ts-code-validation-gate skill. Explain when this gate must run and what checks it executes before review. Include concise bullet points.",
+      "expected_output": "States post-implementation/pre-review timing and enumerates formatting/linting, unit tests, semgrep, osv-scanner, and fallow.",
+      "files": [],
+      "expectations": [
+        "after implementation",
+        "before code review",
+        "formatting/linting",
+        "unit tests",
+        "semgrep",
+        "osv-scanner",
+        "fallow"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Use the ts-code-validation-gate skill. The previous run has needs-remediation.flag and remediation-ledger.md still contains unchecked items. What is the required gate outcome and review status?",
+      "expected_output": "Requires fail-closed behavior and states review is not valid until prior ledger is resolved.",
+      "files": [],
+      "expectations": ["fail-closed", "invalid", "remediation-ledger"]
+    },
+    {
+      "id": 3,
+      "prompt": "Use the ts-code-validation-gate skill. A run fails tests and semgrep. Describe required artifacts, remediation actions, and rerun behavior.",
+      "expected_output": "Mentions evidence artifacts, remediation-ledger checklist completion, and rerun requirement before review.",
+      "files": [],
+      "expectations": ["status.json", "remediation-ledger.md", "- [x]", "rerun"]
+    }
+  ]
+}

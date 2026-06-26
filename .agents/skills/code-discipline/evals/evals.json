@@ -3,35 +3,397 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "Refactor this endpoint cleanup so it stays readable, but do not create a helper just to wrap `request.query.myVariable?.trim()` or move a single literal into a constants file.",
-      "expected_output": "Keeps trivial normalization inline, rejects meaningless constant extraction, and explains why the simpler structure is the correct one.",
-      "files": [],
+      "prompt": "Implement a new user registration feature in a Node.js/Express app with Prisma ORM. The code has several parseUserInput and resolveUserData helper functions scattered in the controller (see evals/fixtures/prisma-resolve-parse-bloat.ts). Refactor appropriately.",
+      "expected_output": "Flags the numerous local resolve/parse variants as code bloat. Recommends using generalized Prisma utilities or a single schema validation library (e.g. zod) instead of custom per-field helpers. Rejects creating additional local helpers. Uses the feature addition as opportunity to establish superior abstractions (single validation layer). Produces a clear explanation documenting the architectural decision and why the admission gate was not met for local helpers.",
+      "files": ["evals/fixtures/prisma-resolve-parse-bloat.ts"],
       "expectations": [
-        "Rejects trivial helper extraction for one-line logic.",
-        "Rejects meaningless `constants` extraction for one-off literals.",
-        "Prefers the cleanest truthful variable naming."
+        "Detects and rejects multiple local resolve/parse helper variants for ORM/schema handling.",
+        "Prefers generalized external library or Prisma built-ins over custom helpers.",
+        "Reports the bloat risk and suggests consolidation to existing utilities.",
+        "Explicitly requires refactoring surrounding code to superior abstractions when adding the feature.",
+        "Produces a clear explanation for the architectural decision (helper policy + library preference)."
       ]
     },
     {
       "id": 2,
-      "prompt": "The UI work repeats a number formatting snippet and a date parsing snippet across three files. Decide whether to keep them inline, use a library, or promote a shared helper.",
-      "expected_output": "Prefers a reputable library when appropriate and only introduces a shared helper when reuse and ownership justify it.",
-      "files": [],
+      "prompt": "Add a new feature for handling complex product catalog schemas in a GraphQL API. The current schema.ts mixes types, resolvers, and relations across unrelated ownership boundaries. Propose the correct structure.",
+      "expected_output": "Enforces one dedicated file per schema purpose: main schema, sub-schemas, and relations in separate files. Explicitly rejects consolidating into a single GOD file. Notes that intent and ownership matter more than raw length. Uses the new feature work as trigger to split and create superior modular architecture. Produces a clear explanation for the file organization decision.",
+      "files": ["evals/fixtures/god-schema.ts"],
       "expectations": [
-        "Evaluates platform and library options before inventing a helper.",
-        "Promotes shared logic only when reuse is real.",
-        "Avoids generic helper buckets."
+        "Rejects single large consolidated schema file as GOD file.",
+        "Mandates separate files for main schema, sub-schemas, and relations (e.g. user.schema.ts, user.relations.ts).",
+        "Explains that arbitrary line limits miss the architectural intent.",
+        "Uses addition of feature to drive refactoring toward better architecture.",
+        "Produces a clear explanation documenting the one-file-per-purpose rule application."
       ]
     },
     {
       "id": 3,
-      "prompt": "A component has four local styled declarations and one tiny constant used once. Review whether they belong in a separate file or should stay local.",
-      "expected_output": "Keeps one-off constants and local styles colocated unless there is a real ownership or reuse boundary.",
+      "prompt": "A service file still uses function declarations even though there is no hoisting need. Convert the declarations to arrow functions while keeping the feature shape the same.",
+      "expected_output": "Refactors the declarations to arrow syntax and keeps the change syntax-focused. Does not introduce extra architectural churn or new abstraction layers. Preserves the surrounding behavior while improving local function style.",
+      "files": ["evals/fixtures/function-declarations-only.ts"],
+      "expectations": [
+        "Converts function declarations to arrow functions.",
+        "Keeps the change syntax-focused instead of introducing new architecture.",
+        "Preserves behavior while improving local function style."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Review a class-based UserService that uses ES6 inheritance for role behavior. A new requirement adds role-based permissions.",
+      "expected_output": "Rejects ES6 classes. Favors composition, higher-order functions, or closures for the behavior extension. Creates an a clear explanation documenting the choice. Does not mix in arrow-syntax cleanup because that is a separate concern.",
+      "files": ["evals/fixtures/es6-class-service.ts"],
+      "expectations": [
+        "Rejects ES6 classes for this behavior extension.",
+        "Prefers composition or higher-order functions over inheritance.",
+        "Produces a clear explanation documentation for the architectural decision.",
+        "Keeps class-vs-composition reasoning separate from function-syntax cleanup."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Implement an async database migration script that fetches config, runs queries, and handles errors. Current draft has unawaited promises and missing try/catch around critical paths (see evals/fixtures/async-unawaited-bad.ts).",
+      "expected_output": "Enforces no unawaited promises. Requires proper try/catch with logging every caught error. Recommends enabling OTEL tracing for observability on core functionality. Checks for existing well-maintained migration library first per mandatory evaluation order. Uses the fix as opportunity to establish superior async abstraction (e.g. withOTELSpan wrapper if justified by admission gate). Produces a clear explanation for the async + observability decision.",
+      "files": ["evals/fixtures/async-unawaited-bad.ts"],
+      "expectations": [
+        "Flags any unawaited promise.",
+        "Requires logging every caught error in try/catch.",
+        "Assesses external library existence before custom async solution.",
+        "Suggests OTEL tracing integration for core paths.",
+        "Requires a clear explanation for the architectural choice (async hygiene + OTEL)."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "The team wants a custom JSON schema validator for API payloads because 'our needs are special'. Evaluate before implementing. Consider the library edge in evals/fixtures/library-edge-platform-suffices.ts as related context.",
+      "expected_output": "First checks whether a well-maintained, well-supported external library (e.g., zod, ajv, joi) already exists and is suitable using the Mandatory Reuse Search Order. Only allows custom solution after proving no viable library meets requirements. Documents the assessment. Rejects unnecessary deps when platform primitives (URLSearchParams) suffice. Produces a clear explanation or decision log entry for the library choice.",
+      "files": ["evals/fixtures/library-edge-platform-suffices.ts"],
+      "expectations": [
+        "Prioritizes assessment of existing external libraries for core functionality.",
+        "Rejects custom solution without evidence that no library suffices.",
+        "Requires documentation of the library evaluation (and platform preference).",
+        "Produces a clear explanation or equivalent durable record for the architectural decision."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "A developer extracted 12 one-line 'resolveX' helpers in a single service file for different entity types (see evals/fixtures/prisma-resolve-parse-bloat.ts pattern). Review the change.",
+      "expected_output": "Strongly rejects the proliferation of local resolve/parse variants. Directs the developer to use a generalized utility or existing ORM capabilities. Explains how this creates technical debt and code bloat. Requires removal and consolidation. Produces a clear explanation if the decision involves a new shared validation boundary.",
+      "files": ["evals/fixtures/prisma-resolve-parse-bloat.ts"],
+      "expectations": [
+        "Identifies helper sprawl of resolve/parse functions as violation.",
+        "Recommends generalized utility instead of per-variant local helpers.",
+        "Provides clear rationale on why this pattern is disallowed.",
+        "If a new shared boundary is proposed, requires it pass the New Abstraction Admission Gate and produces a clear explanation."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Add a new reporting feature. The current reporting module mixes responsibilities across multiple ownership boundaries. Decide on structure while implementing the addition (use god-schema.ts and borderline-god-mixed.ts as analogous GOD risks).",
+      "expected_output": "When adding the feature, refactors the reporting module to split into focused files (never a GOD file). Uses the addition as opportunity to establish superior abstractions (e.g. reporting domain vs query adapters). Creates clear explanation for the new modular architecture.",
+      "files": [
+        "evals/fixtures/god-schema.ts",
+        "evals/fixtures/borderline-god-mixed.ts"
+      ],
+      "expectations": [
+        "Uses new feature introduction to refactor toward better architecture.",
+        "Prevents GOD file formation as responsibilities expand.",
+        "Produces a clear explanation for the architectural improvement.",
+        "Explicitly applies one-file-per-purpose rule."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Review code that does: const user = await getUser(); processUser(user); // no await on a promise inside processUser that should be awaited (see evals/fixtures/async-unawaited-bad.ts).",
+      "expected_output": "Flags the unawaited promise. Requires correct async/await handling with proper try/catch and error logging. Explains observability impact and recommends OTEL. If remediation is proposed, requires a clear explanation for the async + tracing decision.",
+      "files": ["evals/fixtures/async-unawaited-bad.ts"],
+      "expectations": [
+        "Detects unawaited promise as hard violation.",
+        "Requires full try/catch + logging pattern.",
+        "Mentions OTEL tracing enablement.",
+        "Requires a clear explanation when architectural decision (observability boundary) is made."
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "A schema file combines User, Profile, Preferences, and all relations into one file. The developer argues \"it's all related\" (see evals/fixtures/god-schema.ts).",
+      "expected_output": "Rejects single-file consolidation when ownership and lifecycle are not actually unified. Mandates dedicated files for the distinct schema purposes. Explains GOD file risk and architectural clarity benefits. Produces a clear explanation for the organization decision.",
+      "files": ["evals/fixtures/god-schema.ts"],
+      "expectations": [
+        "Rejects single-file schema consolidation when related concepts still have separate ownership boundaries.",
+        "Enforces one-file-per-purpose rule for schemas and relations.",
+        "Prioritizes long-term maintainability over short-term convenience.",
+        "Produces a clear explanation for the architectural decision."
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "A service has accumulated formatUser, normalizePayload, sanitizeInput, transformResponse, safeParseConfig, toDTO, buildQuery, makeClient, createAdapter, getUserById, setCache, useFeatureFlag, and manageSession helpers (all one-line or thin wrappers, single or few call sites). Review and refactor (use prisma-resolve-parse-bloat.ts as style reference for smell density).",
+      "expected_output": "Rejects the full set of smell-named helpers (format/normalize/transform/sanitize/safe/to/build/make/create/get/set/use/manage when they only wrap single ops or rename). Requires inline for trivial/one-off cases or promotion only if admission gate is met. Consolidates or removes. If a new shared utility is justified, it must pass admission gate + produce clear explanation.",
+      "files": ["evals/fixtures/prisma-resolve-parse-bloat.ts"],
+      "expectations": [
+        "Treats names starting with format/normalize/transform/sanitize/safe/to/build/make/create/get/set/use/manage as automatic scrutiny triggers when they only wrap single operations.",
+        "Rejects helpers used once or that only rename/forward.",
+        "Requires either inline or a justified shared boundary with clear explanation."
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Review React component ProductCard that contains 5+ local helpers: formatName, normalizePrice, buildDisplayLabel, resolveStockStatus, sanitizeInput (see evals/fixtures/component-helper-sprawl.tsx). The component is the only consumer.",
+      "expected_output": "Rejects component helper sprawl. Requires keeping simple display/one-off transformations inline or moving reusable domain logic to the correct shared layer (never local utility library in component file). If a shared primitive is proposed, it must pass admission gate + produce clear explanation. References component-logic.md rules.",
+      "files": ["evals/fixtures/component-helper-sprawl.tsx"],
+      "expectations": [
+        "Flags component files growing into local utility libraries.",
+        "Enforces inline for simple/one-off cases; extraction only on reuse/complexity/domain criteria.",
+        "If extraction proposed, requires it satisfy Extraction Gate and produces a clear explanation.",
+        "Shows evidence of having consulted references/component-logic.md for the decision criteria."
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "A developer extracted MAX_RETRIES, DEFAULT_TIMEOUT, FEATURE_FLAG_X into constants.ts because 'it's cleaner'. Only one file (apiClient.ts) consumes them (see evals/fixtures/one-off-constants.ts). Review.",
+      "expected_output": "Rejects one-off constant extraction into a module for a single consumer. Requires keeping one-off literals near use when that improves readability. Only promote when shared meaning, reuse, or public contract. If a shared constants boundary is later justified, requires a clear explanation.",
+      "files": ["evals/fixtures/one-off-constants.ts"],
+      "expectations": [
+        "Rejects constants file for single consumer.",
+        "Requires literal kept inline unless it carries shared meaning or is part of cross-file contract.",
+        "If a new shared constants module is proposed, requires admission gate pass + clear explanation."
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Package A and Package B in a monorepo each contain an identical isValidEmail helper (see evals/fixtures/monorepo-dup-package-a.ts and monorepo-dup-package-b.ts). Review and correct.",
+      "expected_output": "Detects duplicate utility logic across packages. Requires promotion to the correct shared package or existing repository utility. Respects architecture boundaries. Produces a clear explanation for the shared utility decision if a new shared module is created.",
+      "files": [
+        "evals/fixtures/monorepo-dup-package-a.ts",
+        "evals/fixtures/monorepo-dup-package-b.ts"
+      ],
+      "expectations": [
+        "Identifies cross-package duplication as violation of monorepo/workspace rules.",
+        "Requires promotion to correct shared layer instead of local copies.",
+        "If new shared utility is added, requires it pass New Abstraction Admission Gate and produces a clear explanation."
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Styles for a Button were split into button.styles.ts even though the styles are purely local to one component and the split adds no ownership or reuse value (see evals/fixtures/unnecessary-style-split.ts). Review the organization.",
+      "expected_output": "Rejects the split. Prefers colocated component styles for component-local concerns. Requires descriptive ownership names if a split is later justified (Button.styles.ts over generic styles.ts). Only split when ownership/reuse/maintenance clarity is gained. Produces a clear explanation only if a new shared style primitive is created.",
+      "files": ["evals/fixtures/unnecessary-style-split.ts"],
+      "expectations": [
+        "Rejects style splits that add no ownership or reuse value.",
+        "Enforces colocated styles for local concerns; shared primitives only on true multi-component reuse.",
+        "Requires descriptive filenames communicating ownership when split is justified."
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "A 280-line file mixes User aggregate logic with reporting queries in the same module (see evals/fixtures/borderline-god-mixed.ts). Developer argues 'only 280 lines, all related'. Decide structure while adding a small reporting enhancement.",
+      "expected_output": "Rejects the mixed file despite modest line count. Mandates split into user.* and reporting.* dedicated files per one-file-per-purpose. Uses the enhancement as opportunity to establish superior boundaries. Produces a clear explanation for the decision.",
+      "files": ["evals/fixtures/borderline-god-mixed.ts"],
+      "expectations": [
+        "Rejects mixed-concern files even under arbitrary line thresholds when ownership is confused.",
+        "Enforces dedicated files for distinct purposes.",
+        "Uses feature addition to drive architectural improvement.",
+        "Produces a clear explanation for the organization decision."
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "Review a 450-line user.domain.ts that is a single cohesive User aggregate root with its value objects, invariants, command handlers, and event application all in one file because they share ownership and lifecycle (see evals/fixtures/cohesive-large-domain.ts). Relations are already in user.relations.ts. Is this a GOD file?",
+      "expected_output": "Accepts the cohesive large file. Explains that intent, ownership, and coupling matter more than line count. Distinguishes from GOD files (mixed unrelated concerns or no clear boundary). Does not force split. References that line count is only an indicator. If any new abstraction is proposed during review, requires admission gate + clear explanation.",
+      "files": ["evals/fixtures/cohesive-large-domain.ts"],
+      "expectations": [
+        "Accepts single large file when it represents one cohesive domain with clear internal structure and ownership.",
+        "Rejects mechanical line-count rules; prioritizes architectural intent.",
+        "Only requires a clear explanation if a new abstraction or boundary change is actually proposed."
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "Review the following service for compliance before merging (see evals/fixtures/positive-clean-service.ts). It uses zod for all parsing, Prisma directly, arrow functions, proper async with try/catch + logging + OTEL, no local helpers, no one-off constants extracted, no unnecessary files.",
+      "expected_output": "Explicitly approves the code as compliant. Confirms no violations of helper bloat, GOD files, syntax, functional style, async rules, library-first, constant placement, or file organization. Confirms all Definition of Done items are satisfied. No refactoring or clear explanation required because no new architectural decision or abstraction was introduced.",
+      "files": ["evals/fixtures/positive-clean-service.ts"],
+      "expectations": [
+        "Approves clean, disciplined implementation with no violations.",
+        "Explicitly verifies Definition of Done checklist items are met (no new trivial helpers, no duplicates, abstractions justified or absent, platform/libs preferred, scope not bloated).",
+        "Does not invent problems or suggest changes when none are needed."
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Review this file that previously contained 12 resolveX helpers (see evals/fixtures/already-remediated.ts). The developer has already removed all local resolve/parse variants and now uses a single zod schema + repository call. Is the remediation complete and acceptable?",
+      "expected_output": "Approves the remediation. Confirms that the previous bloat has been removed and the current code satisfies the rules (generalized library, no per-variant helpers, proper async if present, no new violations introduced). Explicitly states 'no further changes required'. If the remediation itself introduced a new shared boundary, verifies it passed admission gate and has clear explanation.",
+      "files": ["evals/fixtures/already-remediated.ts"],
+      "expectations": [
+        "Recognizes and approves correct remediation of prior helper sprawl.",
+        "Does not require additional changes when code is now compliant.",
+        "Verifies no new violations were introduced during the fix."
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "Team proposes adding the 'qs' or 'query-string' package for URL query parsing in a new feature because 'it's more ergonomic'. Platform URLSearchParams already exists and is used elsewhere (see evals/fixtures/library-edge-platform-suffices.ts). Evaluate per library-first rules.",
+      "expected_output": "Follows Mandatory Evaluation Order: platform primitive (URLSearchParams) first. Rejects the new dependency. Documents that the platform suffices and the dep adds no meaningful value beyond a small local implementation. If a wrapper is later proposed, rejects it as rename-only or thin. Produces a clear explanation for the library/platform decision.",
+      "files": ["evals/fixtures/library-edge-platform-suffices.ts"],
+      "expectations": [
+        "Prefers platform API over adding a dependency when it solves the problem.",
+        "Rejects dep that does not meet dependency admission rules (no existing dep needed, platform sufficient, no meaningful value beyond small local).",
+        "Rejects any thin wrapper that only renames the platform call.",
+        "Produces a clear explanation for the decision."
+      ]
+    },
+    {
+      "id": 21,
+      "prompt": "A tiny unmaintained single-purpose validation lib from 2019 is proposed for a new core payload validator because 'it does exactly what we need and is small'. Well-maintained alternatives (zod, ajv) are already in the repo and used by other services. Evaluate.",
+      "expected_output": "Rejects the tiny unmaintained dep. Prefers well-maintained, already-used-in-repo libraries. Requires evidence that maintenance/security risk is acceptable and that the lib adds value beyond platform or existing deps. Documents the assessment. Produces a clear explanation for the library decision.",
       "files": [],
       "expectations": [
-        "Rejects style-file splitting when it adds no ownership value.",
-        "Rejects extracting a one-off constant without shared meaning.",
-        "Reports what stayed inline and why."
+        "Rejects unmaintained or extremely small single-purpose deps for core functionality when battle-tested alternatives exist.",
+        "Requires preference for libraries already used in the repository.",
+        "Documents full library evaluation per library-preference rules.",
+        "Produces a clear explanation for the architectural decision."
+      ]
+    },
+    {
+      "id": 22,
+      "prompt": "Review this async migration implementation for compliance (see evals/fixtures/async-compliant.ts). It uses a well-maintained migration lib chosen after prior assessment, has full try/catch with logging every error, awaits all promises, and has OTEL tracing active on the critical path. No unawaited promises.",
+      "expected_output": "Explicitly approves as compliant. Confirms no unawaited promises, every error is logged in try/catch, OTEL is active on core paths, library was assessed first. No changes suggested. Verifies Definition of Done (no bloat introduced). Notes that because no new architectural decision or abstraction was added in this review, clear explanation is not newly required here (prior assessment clear explanation already covers the lib choice).",
+      "files": ["evals/fixtures/async-compliant.ts"],
+      "expectations": [
+        "Approves correct async + observability implementation.",
+        "Confirms OTEL, logging every error, no unawaited promises, library-first already satisfied.",
+        "Does not require new clear explanation when the decision was already documented in a prior assessment and this change only applies the pattern."
+      ]
+    },
+    {
+      "id": 23,
+      "prompt": "You are considering introducing a new 'PaymentProcessor' abstraction for a checkout feature. It would sit between the controller and the existing payment SDK, forwarding most calls but adding a small policy check. Use the exact Value Test and Layer Chain Rule from references/abstraction-patterns.md plus the New Abstraction Admission Gate from SKILL.md to decide. The prompt is intentionally borderline.",
+      "expected_output": "Consults references/abstraction-patterns.md (Value Test, Layer Chain Rule) and SKILL.md admission gate. Determines that if it only forwards + one small policy, it is likely a thin service layer or adapter chain and should be rejected or collapsed. Only accepts if it clearly enforces domain invariants/policy, isolates infrastructure boundary, or provides non-trivial guarantees that cannot be achieved with existing primitives. If accepted, produces a clear explanation citing the exact gate conditions met. If rejected, explains which test failed.",
+      "files": [],
+      "expectations": [
+        "Shows evidence of reading references/abstraction-patterns.md and applying Value Test / Layer Chain Rule.",
+        "Correctly applies New Abstraction Admission Gate.",
+        "Rejects thin forwarding + minor policy as insufficient justification.",
+        "If abstraction is accepted, produces a clear explanation naming the exact gate condition(s) satisfied."
+      ]
+    },
+    {
+      "id": 24,
+      "prompt": "After implementing a change that touched helper logic, file organization, and an async path, explicitly verify the full Definition of Done checklist from SKILL.md against the final state (use positive-clean-service.ts or async-compliant.ts as the 'after' state for the exercise).",
+      "expected_output": "Walks through all six DoD items and confirms each is true for the final state: no newly introduced trivial helper/wrapper layers, no duplicate utility logic, no one-off constants extracted without shared-meaning reason, new abstractions (if any) justified by admission gate, platform/framework/internal utilities preferred, changed scope is simpler or equal (not more bloated). Outputs a clear checklist with evidence per item. If any item fails, treats as blocking.",
+      "files": [
+        "evals/fixtures/positive-clean-service.ts",
+        "evals/fixtures/async-compliant.ts"
+      ],
+      "expectations": [
+        "Explicitly enumerates and verifies every Definition of Done item with evidence.",
+        "Treats any DoD failure as a defect that must be fixed before the change is acceptable."
+      ]
+    },
+    {
+      "id": 25,
+      "prompt": "Add a small enhancement to an existing reporting feature. The current module mixes concerns across ownership boundaries (use borderline-god-mixed.ts + god-schema.ts as the starting state). While adding the enhancement, decide structure and abstractions.",
+      "expected_output": "Uses the enhancement as mandatory trigger to refactor the module into focused per-purpose files. Establishes superior abstractions (e.g., reporting query service vs domain vs adapters) only where admission gate is met. Produces a clear explanation for the modular architecture decision. Rejects keeping or growing the GOD file.",
+      "files": [
+        "evals/fixtures/borderline-god-mixed.ts",
+        "evals/fixtures/god-schema.ts"
+      ],
+      "expectations": [
+        "Uniformly applies 'refactoring for superior abstractions on new features' rule.",
+        "Prevents GOD file growth.",
+        "Produces a clear explanation for the architecture change.",
+        "Only adds abstractions that pass admission gate."
+      ]
+    },
+    {
+      "id": 26,
+      "prompt": "A developer created a separate file for a 4-line button style fragment used once in Button.tsx (see unnecessary-style-split.ts pattern). They argue 'it keeps the component clean'. Review against File and Style Organization Rules.",
+      "expected_output": "Rejects the tiny style fragment separate file. Requires colocated declarations for local, single-use styles. Only split when the split makes ownership, reuse, or maintenance clearer. If a shared primitive is later proposed, requires it satisfy the rules and produces a clear explanation.",
+      "files": ["evals/fixtures/unnecessary-style-split.ts"],
+      "expectations": [
+        "Rejects separate files for tiny style fragments used once.",
+        "Enforces colocated component styles for component-local concerns.",
+        "Requires real ownership/reuse/maintenance benefit for any split."
+      ]
+    },
+    {
+      "id": 27,
+      "prompt": "Review and refactor this small service snippet that has a one-line helper 'formatDisplayName' used in two places (the helper just does `${first} ${last}` with trimming). The change is part of adding a user greeting feature. After performing the code-discipline analysis and any edits, your FINAL response to the user MUST contain a section exactly titled '## Output Contract' that reports on all six items listed under 'Output Contract' in SKILL.md: what abstraction/helper candidates were considered; what existing primitive/utility was reused; what abstractions were rejected and why; what consolidations/removals were performed; any new abstraction added and which admission-gate condition allowed it; where constants and styles were kept inline instead of being extracted. Use the exact bullet phrasing from the skill.",
+      "expected_output": "Performs correct discipline analysis (likely rejects or inlines the trivial helper, prefers template literal or existing util). Then produces the exact '## Output Contract' section in the final answer with all six required reports, using the precise item names from SKILL.md Output Contract. The reports are accurate to what was actually considered/rejected/reused in this interaction.",
+      "files": [],
+      "expectations": [
+        "Correctly applies helper admission gate / smell rules to the trivial format helper.",
+        "Final response contains a literal '## Output Contract' section.",
+        "The section enumerates all six Output Contract items with truthful content for the decisions made in the run.",
+        "Demonstrates the skill's required post-use reporting discipline."
+      ]
+    },
+    {
+      "id": 28,
+      "prompt": "A utility function 'buildSearchClause' is proposed. It is called from two repository files, takes a filter object and returns a SQL-like where clause string using simple string concatenation and escaping. It is not truly domain-specific (it's a generic query builder fragment) and duplicates what an existing query library or the ORM's query builder already does better and safer. The author wants to place it in 'utils/searchHelpers.ts'. Before accepting or creating it, consult the full rules in references/helper-functions.md (especially Mandatory Helper Admission Gate, When NOT to Create a Helper, Review Checklist, Helper Naming, Placement Rules). Decide and document. If creating any new boundary, produce clear explanation.",
+      "expected_output": "Consults references/helper-functions.md (shows evidence via specific rule references in reasoning). Rejects the helper because it fails the admission gate (duplicates existing capability, not non-trivial domain, better solved by framework/dependency). Recommends using the ORM or installed query builder instead per Mandatory Evaluation Order. If any new file or abstraction is considered, correctly applies placement and naming rules and produces a clear explanation only if gate passes (which it does not). Explains using the Review Checklist points.",
+      "files": [],
+      "expectations": [
+        "Explicitly references content from references/helper-functions.md (admission gate, review checklist, placement, naming, when-not-to-create).",
+        "Rejects the proposed helper on multiple rule violations.",
+        "Prefers existing repository dependency or framework capability.",
+        "Correctly withholds new abstraction/file because gate not met; produces a clear explanation only if one is added (not in this case)."
+      ]
+    },
+    {
+      "id": 29,
+      "prompt": "In a React component file, there are several one-off literals (magic numbers for spacing, a status label string, a timeout value) and a 6-line styled block used only by this component. The developer wants to extract them to 'constants.ts' and 'Component.styles.ts' 'for cleanliness and future reuse'. Before doing so, apply the exact Practical Check questions and all rules from references/constants-and-organization.md, plus the Constant Placement Rules, File and Style Organization Rules, and Component Logic Rules from SKILL.md. Decide what stays inline vs. extracted. If any extraction is justified, ensure it meets the criteria and produce clear explanation for the new boundary.",
+      "expected_output": "Shows clear application of the 4 Practical Check questions from references/constants-and-organization.md. Keeps the one-off literals and local style block inline because they fail the 'used more than once', 'new name explains more', 'real boundary vs move around', and 'would be easier inline' tests. Rejects the constants.ts and separate styles.ts for single-consumer local concerns. References the Constant Placement Rules and colocated styles preference. Only if a true shared contract or multi-component reuse were proven would extraction + clear explanation be allowed (not the case here).",
+      "files": [],
+      "expectations": [
+        "Demonstrates having read and applied references/constants-and-organization.md (quotes or paraphrases the Practical Check questions and rules).",
+        "Correctly decides to keep one-offs and local styles inline per the criteria.",
+        "Cites Constant Placement Rules, File and Style Organization Rules, and Component Logic Rules.",
+        "Produces a clear explanation only for justified new shared boundaries (none here)."
+      ]
+    },
+    {
+      "id": 30,
+      "prompt": "A report builder helper has grown multiple optional positional params. Refactor the API shape before adding the feature.",
+      "expected_output": "Prefers a single options object because the parameters are already variadic and likely to grow. Avoids a long positional signature or wrapper overloads. Explains why the object shape improves readability and future changes. Keeps small stable positional signatures only when they are genuinely fixed and clearer.",
+      "files": ["evals/fixtures/object-args-vs-params.ts"],
+      "expectations": [
+        "Recommends an object parameter when optionality and variance are growing.",
+        "Rejects positional-argument sprawl and thin wrapper overloads.",
+        "Explains why the object shape is clearer for the evolving API."
+      ]
+    },
+    {
+      "id": 31,
+      "prompt": "A tiny helper takes three fixed numbers used by a geometry calculation. There are no optionals, the call sites are stable, and the function is not likely to grow. Decide whether it should be converted to an options object.",
+      "expected_output": "Keeps the small fixed positional signature because an object would add ceremony without clarity. Explains that object parameters are for variance and numerous optionals, not for every function. Avoids unnecessary wrapper or API churn.",
+      "files": ["evals/fixtures/positional-args-small-stable.ts"],
+      "expectations": [
+        "Keeps a stable small positional signature when it is clearer than an options object.",
+        "Does not objectify every function by default.",
+        "Explains that object parameters are for variance and numerous optionals."
+      ]
+    },
+    {
+      "id": 32,
+      "prompt": "A proposed PaymentProcessor wrapper would sit between the controller and the payment SDK and mostly forward calls, while adding only a tiny policy check. Decide whether the abstraction is justified or should be collapsed.",
+      "expected_output": "Rejects the thin wrapper unless it clearly isolates a real security or infrastructure boundary. Requires a non-trivial guarantee, not just a small policy check. If accepted, the clear explanation must name the exact gate condition that justified it.",
+      "files": [],
+      "expectations": [
+        "Rejects thin forwarding wrappers with only a small policy check.",
+        "Requires a real security or infrastructure boundary for acceptance.",
+        "Produces a clear explanation only if the abstraction is actually justified."
+      ]
+    },
+    {
+      "id": 33,
+      "prompt": "A recursive tree-walk helper calls itself and benefits from hoisting in the module. Decide whether it should be converted to an arrow function or kept as a declaration.",
+      "expected_output": "Keeps the function declaration because hoisting and named recursion are the clearer shape here. Explains that arrow functions are the default for local function values, but not when a declaration is more readable or ergonomically correct.",
+      "files": ["evals/fixtures/function-declaration-should-stay.ts"],
+      "expectations": [
+        "Keeps a function declaration when hoisting or named recursion is the clearer choice.",
+        "Does not overcorrect to arrow syntax when the declaration is ergonomically better.",
+        "Explains why the declaration is the right shape for this helper."
       ]
     }
   ]

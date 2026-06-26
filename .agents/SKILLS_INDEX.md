@@ -9,6 +9,11 @@ This index is the single place to discover active skills and expected usage patt
 - Purpose: Enforces complete execution, managed sub-agent orchestration, repository-aware spec-driven delivery, independent review gating, validation, post-mortem closure, and honest reporting.
 - Use when: Implementing or hardening behavior, running architecture or design work, producing production-grade delivery, or performing review workflows that must be complete and verified.
 
+### github-pr-review
+- Path: `.agents/skills/github-pr-review/SKILL.md`
+- Purpose: Performs GitHub-native pull request reviews with batched inline comments, human-tone review bodies, strict severity classification, and direct review-state selection.
+- Use when: A pull request must be reviewed in GitHub itself, including inline comments, re-review, request-changes decisions, or GitHub review submission through MCP or gh.
+
 ### execution-alignment-gate
 - Path: `.agents/skills/execution-alignment-gate/SKILL.md`
 - Purpose: Detects materially ambiguous or under-specified requests, routes clarification to the right target, and keeps alignment bounded before execution.
@@ -64,6 +69,11 @@ This index is the single place to discover active skills and expected usage patt
 - Purpose: Coordinates ticket-tracking and time-tracking lifecycle operations for active work, including project mapping, task/subtask setup, state transitions, replication, connector installation flow, timer gating by configuration, low-interruption autonomous execution, and closeout logging.
 - Use when: A user starts with `/ProjectTracker`, provides Jira or ClickUp ticket IDs, needs cross-board synchronization, or needs work time bound to project tasks during execution.
 
+### ts-code-validation-gate
+- Path: `.agents/skills/ts-code-validation-gate/SKILL.md`
+- Purpose: Enforces a pre-review validation gate that captures evidence from formatting/linting, tests, semgrep, osv-scanner, and fallow, then fails closed until remediation-ledger items are fully resolved.
+- Use when: Code appears final and must be validated with fail-closed evidence before review is considered valid.
+
 ## Standard Pairing
 
 For most coding tasks, use this standard set together:
@@ -78,6 +88,8 @@ Add `frontend-system-discipline` whenever frontend architecture, design tokens, 
 This standard set prevents partial implementations, enforces standards, preserves Biome enforcement discipline, and blocks unnecessary abstraction sprawl while the alignment gate prevents avoidable wrong-path execution.
 
 For skill authoring or skill changes, add `skill-creator` and do not stop at `evals/evals.json`; the run-and-review loop must execute unless the user explicitly opts out.
+
+For GitHub-backed review work, add `github-pr-review` when the output must be a real pull request review event rather than a local markdown review.
 
 ## Mode Defaults
 

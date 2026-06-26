@@ -72,6 +72,7 @@ Required behavior:
 - review every result before merging or approving it
 - acknowledge strong outcomes briefly
 - correct weak outcomes with strict professional feedback, concise scoring, and direct procedural guidance
+- prevent tool-loop churn where a worker repeatedly restates readiness without executing the assigned repository actions
 
 Do not use adversarial language. Escalate by increasing specificity, constraint density, and evidence.
 
@@ -102,6 +103,7 @@ Rules:
 Do not hide failing validation, known defects, or unresolved assumptions from the worker.
 Do not forward unrelated repository context when a smaller packet is sufficient.
 Prefer diffs, file paths, acceptance criteria, and validation commands over long narrative restatements.
+Do not delegate planning-only packets for implementation tasks; include explicit execution actions and completion evidence requirements.
 
 ## Required worker response shape
 

@@ -1,0 +1,33 @@
+[
+  {
+    "path": "src/utils/db.ts",
+    "line": 14,
+    "side": "RIGHT",
+    "body": "### **P0(SECURITY): SQL Injection In Query Construction**\nThis interpolates untrusted input directly into the query text. That is a real injection path, not a style issue. Parameterize the query instead of building raw SQL.\n\n```suggestion\nconst results = await db.query('SELECT * FROM users WHERE id = $1', [userId]);\n```"
+  },
+  {
+    "path": "src/services/uploader.ts",
+    "line": 89,
+    "side": "RIGHT",
+    "body": "### **P1(ARCHITECTURE): Heavy Upload Work Stays On The Web Process**\nThis keeps large upload handling on the request path and couples the API process to long-running file transfer work. Push the upload to object storage with a presigned flow instead of doing it in-process."
+  },
+  {
+    "path": "src/components/UserList.tsx",
+    "line": 55,
+    "side": "RIGHT",
+    "start_line": 50,
+    "start_side": "RIGHT",
+    "body": "### **P1(EFFICIENCY): N Plus One Fetch In Render Flow**\nThis block issues one query per item and scales badly as the list grows. Batch the IDs and fetch once before the render path.\n\n```suggestion\nconst users = await db.users.findMany({ where: { id: { in: userIds } } });\n```"
+  },
+  {
+    "path": "src/routes/api.ts",
+    "line": 22,
+    "side": "RIGHT",
+    "body": "### **P2(TECH-DEBT): Missing Error Middleware Registration**\nThe router chain can throw here without landing in the shared error boundary. Register the error handler at the router level so failures stop disappearing into generic 500 handling.\n\n```suggestion\nrouter.use(errorHandler);\n```"
+  },
+  {
+    "path": "src/components/ProfileCard.tsx",
+    "subjectType": "FILE",
+    "body": "### **P2(UI): Inline Styling Breaks The Shared UI Contract**\nThis file is now carrying local visual rules that should live in a styled component or an existing shared primitive. Move the styling into the component boundary instead of hardcoding it in JSX."
+  }
+]

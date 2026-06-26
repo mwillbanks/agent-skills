@@ -47,6 +47,7 @@ This repository will eventually contain a large collection of agent skills cover
 Examples of the kinds of skills that may exist in this repository include:
 
 - execution discipline
+- GitHub pull request review
 - repository standards enforcement
 - code discipline and abstraction control
 - documentation hygiene
@@ -68,6 +69,7 @@ This repository's own specification-governed delivery artifacts live under `.spe
 ## Current active skills
 
 - `agent-execution-mode`: enforces end-to-end completion, repository-aware SDD alignment, validation, and a mandatory independent `agent-review` gate when available.
+- `github-pr-review`: performs GitHub-native pull request reviews with human-tone inline feedback, strict severity discipline, and batched review submission.
 - `execution-alignment-gate`: forces bounded clarification when ambiguity would cause rework or wrong-path execution.
 - `repo-standards-enforcement`: keeps work aligned with repository-native tooling, tests, and maintainability rules.
 - `biome-enforcement`: keeps Biome as the final remediation and enforcement pass.
@@ -79,6 +81,7 @@ This repository's own specification-governed delivery artifacts live under `.spe
 - `frontend-system-discipline`: enforces design-system, theme-token, composition, and styling-surface rigor for frontend work.
 - `skill-creator`: creates and improves skills through the full draft, test, viewer, human-feedback, and iteration loop instead of stopping at eval-definition artifacts.
 - `project-tracker`: enforces ticket and time-tracking orchestration for `/ProjectTracker` workflows across Jira, ClickUp, and Everhour with setup, in-progress transitions, and closeout logging.
+- `ts-code-validation-gate`: enforces a fail-closed pre-review gate that captures formatting/linting, test, semgrep, osv-scanner, and fallow evidence and blocks review until remediation-ledger items are closed.
 
 The Speckit skill is conditional, not the default planning path. It is intended for feature-definition work only when the repository already uses Speckit or the prompt explicitly asks for Speckit. It supports:
 

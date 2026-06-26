@@ -19,6 +19,7 @@ type EvalFile = {
 const repoRoot = join(import.meta.dir, "..");
 const requiredSkillDirs = [
   "agent-execution-mode",
+  "github-pr-review",
   "code-discipline",
   "execution-alignment-gate",
   "skill-creator",
@@ -27,6 +28,7 @@ const requiredSkillDirs = [
   "requirements-traceability-matrix",
   "spec-change-governance",
   "frontend-system-discipline",
+  "ts-code-validation-gate",
 ];
 
 async function readJson(path: string): Promise<EvalFile> {

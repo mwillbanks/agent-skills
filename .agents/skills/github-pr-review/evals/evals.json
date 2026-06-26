@@ -1,0 +1,182 @@
+{
+  "skill_name": "github-pr-review",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Review https://github.com/acme/platform/pull/482. The PR says it reduces webhook latency without changing retry semantics. Leave the review in GitHub, not as a local write-up.",
+      "expected_output": "Chooses a GitHub-backed PR review workflow, checks the stated intent against the diff, and prepares a batched review submission instead of a local-only summary.",
+      "files": [],
+      "expectations": [
+        "Uses GitHub review flow rather than a durable local artifact.",
+        "Reviews against stated intent and regression risk.",
+        "Mentions batched inline comments plus a final review state."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "GitHub review this PR and request changes if needed. One of the changed lines interpolates a user id directly into SQL.",
+      "expected_output": "Classifies the issue as a blocker-level security defect and frames it as a precise GitHub inline review comment with a deterministic correction.",
+      "files": [],
+      "expectations": [
+        "Escalates raw SQL interpolation to P0 security severity.",
+        "Uses the required comment title format.",
+        "Prefers an anchored inline comment with a concrete correction."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review the frontend PR in GitHub. It adds clickable divs, icon-only buttons without labels, and inline styles to get the layout over the line quickly.",
+      "expected_output": "Treats accessibility and inline styling as real defects, not nits, and enforces proper component and styling boundaries.",
+      "files": [],
+      "expectations": [
+        "Flags accessibility defects as substantive findings.",
+        "Flags inline styles as a defect.",
+        "Prefers a styled or shared component boundary over local styling hacks."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "This React PR uses sx props all over new MUI components and duplicates the same visual treatment in three feature files. Review it in GitHub with the right level of severity.",
+      "expected_output": "Calls out framework styling misuse and repeated UI drift as maintainability defects that should move into a reusable styled extension or shared component.",
+      "files": [],
+      "expectations": [
+        "Treats sx-based styling shortcuts as defects when a shared boundary is warranted.",
+        "Calls out duplicated UI implementation as a real issue.",
+        "Directs the fix toward a reusable component or styled extension."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Please review PR 197. The code works on the happy path, but it adds a new permission boundary with no new tests. Submit the result to GitHub.",
+      "expected_output": "Treats missing critical tests as a meaningful review finding and keeps the decision tied to merge readiness.",
+      "files": [],
+      "expectations": [
+        "Flags missing tests for a permission change as a defect.",
+        "Keeps review state discipline tied to blocker severity.",
+        "Avoids reducing the issue to a style preference."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Re-review this PR after the author pushed a second round of changes. Some old threads were addressed, but I do not want the remaining blockers forgotten just because the diff moved.",
+      "expected_output": "Fetches prior findings, distinguishes resolved from unresolved issues, and does not approve while an old blocker still stands.",
+      "files": [],
+      "expectations": [
+        "Mentions checking existing review threads or prior findings.",
+        "Marks resolved findings separately from new findings.",
+        "Refuses approval while an unresolved blocker remains."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "The GitHub MCP server is down. Review the PR anyway and post the review through whatever fallback still gets the comments into GitHub.",
+      "expected_output": "Falls back cleanly to the next interface instead of abandoning the review, and keeps the output tied to GitHub submission.",
+      "files": [],
+      "expectations": [
+        "Falls back from MCP to another GitHub-capable path.",
+        "Preserves batched review submission behavior.",
+        "Reports the fallback path briefly in the user-facing result."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "I only have a file-wide architecture concern on this PR. Do not spam every occurrence. Leave the correct kind of GitHub review comment.",
+      "expected_output": "Uses a file-level comment with the platform's correct file-level subject shape for the active interface, without line anchors or suggestion blocks, when the issue is architectural and file-wide.",
+      "files": [],
+      "expectations": [
+        "Selects a file-level comment shape.",
+        "Uses subjectType FILE for MCP or subject_type file for gh REST.",
+        "Omits line and side fields for the file-level comment.",
+        "Does not attach a suggestion block to the file-level comment."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Batch everything into one GitHub review. I do not want a drip feed of individual comments.",
+      "expected_output": "Builds one review event containing the comment array and a final review state rather than submitting comments piecemeal.",
+      "files": [],
+      "expectations": [
+        "Calls for a single batched review event.",
+        "Includes both inline comments and an overall review state.",
+        "Rejects iterative one-comment-at-a-time submission."
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "The diff is incomplete and the PR description is hand-wavy. Review what you can, but do not pretend you have context you do not have.",
+      "expected_output": "Stays honest about missing context, avoids invented certainty, and names what evidence is missing without dropping review rigor on the visible defects.",
+      "files": [],
+      "expectations": [
+        "Calls out missing context explicitly.",
+        "Still reviews visible defects rather than refusing all review.",
+        "Avoids overstating certainty."
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Only approve this GitHub PR if it is truly mergeable. A good direction is not enough.",
+      "expected_output": "Makes approval contingent on no unresolved blockers and uses changes-requested when the implementation direction is right but execution is still weak.",
+      "files": [],
+      "expectations": [
+        "States that approval means mergeable, not promising.",
+        "Keeps unresolved blockers from being approved.",
+        "Uses direct verdict language instead of encouragement."
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Review this PR like a human reviewer. No AI framing, no fluffy summary, just direct feedback in GitHub with the right review state.",
+      "expected_output": "Uses a human review voice, drops automated-assistant framing, and keeps the GitHub review body terse and direct.",
+      "files": [],
+      "expectations": [
+        "Avoids AI or assistant framing in the review body.",
+        "Keeps the review summary terse and human.",
+        "Spends detail on the actual defects rather than filler."
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Review this API PR in GitHub. The endpoint uploads multipart files through the API server, writes them to local disk, calls a virus scanner, then forwards the result to S3 before returning 200.",
+      "expected_output": "Flags the endpoint as an API layer violation and pushes the design toward presigned object-storage upload plus an ingestion-only API boundary.",
+      "files": [],
+      "expectations": [
+        "Flags raw in-process file transport as a layer-boundary defect.",
+        "Escalates the issue as architecture, not a minor preference.",
+        "Directs the fix toward presigned uploads or an equivalent cloud-native storage boundary."
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Review this backend PR in GitHub. A collection endpoint runs a user lookup inside a map loop, returns every row with no limit, and wraps an outbound HTTP enrichment call inside the transaction block.",
+      "expected_output": "Flags N+1 query loops, missing pagination, and network work inside a transaction as serious backend defects that threaten Postgres and request latency.",
+      "files": [],
+      "expectations": [
+        "Flags the query-in-loop pattern as an N+1 defect.",
+        "Flags missing pagination on a collection endpoint.",
+        "Flags network work inside a transaction as a serious database or reliability issue."
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Review this async API PR in GitHub. It uses Promise.all over a user-supplied list of 5,000 items, kicks off an async syncToSalesforce job without await after the response is sent, and swallows the rejection in an empty catch block.",
+      "expected_output": "Protects the runtime by calling out unbounded concurrency, dangling async work, and swallowed rejections as real operational defects.",
+      "files": [],
+      "expectations": [
+        "Flags unbounded Promise.all on dynamic input.",
+        "Flags fire-and-forget work after the response as unsafe.",
+        "Flags empty catch or swallowed rejection handling as a defect."
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "Review this monolith API PR in GitHub. The endpoint writes a pending record, then enters nested try/catch blocks with sleep timers while it waits for billing, email, and document-generation steps to finish before it responds.",
+      "expected_output": "Treats the endpoint as an orchestration anti-pattern and pushes the workflow toward an async orchestrator or worker-driven design instead of a request-thread state machine.",
+      "files": [],
+      "expectations": [
+        "Flags manual in-request workflow orchestration as an architecture problem.",
+        "Calls out timers or polling inside the request path as unhealthy.",
+        "Directs the design toward an orchestrator, queue, or worker model."
+      ]
+    }
+  ]
+}

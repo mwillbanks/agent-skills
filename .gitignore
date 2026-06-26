@@ -9,3 +9,6 @@
 .vscode/
 node_modules/
 skills-lock.json
+.agents/skills/*/evals/results/
+.agents/evals/
+

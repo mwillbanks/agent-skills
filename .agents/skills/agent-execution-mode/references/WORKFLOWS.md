@@ -176,6 +176,24 @@ Before any code-writing agent edits code:
 2. Resolve the minimal correct command set for static analysis, tests, and final repository enforcement.
 3. Include that command plan in the manager prompt, task state, or execution notes before edits begin.
 
+## Execution transition workflow
+
+Use this workflow to prevent planning-only responses when implementation was requested.
+
+Required sequence:
+
+1. Confirm the target repository and working path.
+2. If the repository is missing locally, clone or fetch it before claiming readiness.
+3. Convert workflow-tool or planning output into an executable action list.
+4. Execute the list using concrete repository operations: file creation or edits, asset acquisition, commands, and validation.
+5. Treat "continue", "run next steps", or equivalent user confirmations as execution authorization unless a blocker exists.
+
+Rules:
+
+- Do not return repeated "workflow ready" responses after execution context is already available.
+- Do not stop after planning tool output when the task requires code or asset changes.
+- If a blocker prevents execution, report the blocker with the exact missing dependency and the minimum resolution step.
+
 Rules:
 
 - Do not default to expensive repo-wide preflight runs.
