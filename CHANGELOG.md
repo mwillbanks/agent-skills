@@ -1,5 +1,12 @@
 # Changelog
 
+# [1.9.0](https://github.com/mwillbanks/agent-skills/compare/1.8.0...1.9.0) (2026-06-26)
+
+
+### Features
+
+* ts-code validation gates, github pr reviews, minor fixes ([6c8ab83](https://github.com/mwillbanks/agent-skills/commit/6c8ab83d0921234fd55b3411637f737031d9a18e))
+
 # [1.8.0](https://github.com/mwillbanks/agent-skills/compare/1.7.0...1.8.0) (2026-04-30)
 
 
