@@ -69,6 +69,11 @@ This index is the single place to discover active skills and expected usage patt
 - Purpose: Coordinates ticket-tracking and time-tracking lifecycle operations for active work, including project mapping, task/subtask setup, state transitions, replication, connector installation flow, timer gating by configuration, low-interruption autonomous execution, and closeout logging.
 - Use when: A user starts with `/ProjectTracker`, provides Jira or ClickUp ticket IDs, needs cross-board synchronization, or needs work time bound to project tasks during execution.
 
+### cloud-native-runtime
+- Path: `.agents/skills/cloud-native-runtime/SKILL.md`
+- Purpose: Guides cloud-native backend/runtime implementation and review across APIs, serverless functions, workers, schedules, object storage, media processing, CDN/cache behavior, IaC, security, observability, deployment readiness, resilience, and cloud-service equivalency.
+- Use when: Implementing, reviewing, or hardening backend/runtime, infrastructure, async processing, upload, networking, security, observability, production deployment, architecture review, or cloud-equivalency work.
+
 ### ts-code-validation-gate
 - Path: `.agents/skills/ts-code-validation-gate/SKILL.md`
 - Purpose: Enforces a pre-review validation gate that captures evidence from formatting/linting, tests, semgrep, osv-scanner, and fallow, then fails closed until remediation-ledger items are fully resolved.

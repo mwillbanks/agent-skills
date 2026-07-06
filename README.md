@@ -81,6 +81,7 @@ This repository's own specification-governed delivery artifacts live under `.spe
 - `frontend-system-discipline`: enforces design-system, theme-token, composition, and styling-surface rigor for frontend work.
 - `skill-creator`: creates and improves skills through the full draft, test, viewer, human-feedback, and iteration loop instead of stopping at eval-definition artifacts.
 - `project-tracker`: enforces ticket and time-tracking orchestration for `/ProjectTracker` workflows across Jira, ClickUp, and Everhour with setup, in-progress transitions, and closeout logging.
+- `cloud-native-runtime`: guides cloud-native backend/runtime implementation and review across APIs, serverless functions, workers, schedules, object storage uploads, media processing, CDN/cache behavior, IaC, security, observability, deployment readiness, resilience, and cloud-service equivalency.
 - `ts-code-validation-gate`: enforces a fail-closed pre-review gate that captures formatting/linting, test, semgrep, osv-scanner, and fallow evidence and blocks review until remediation-ledger items are closed.
 
 The Speckit skill is conditional, not the default planning path. It is intended for feature-definition work only when the repository already uses Speckit or the prompt explicitly asks for Speckit. It supports:

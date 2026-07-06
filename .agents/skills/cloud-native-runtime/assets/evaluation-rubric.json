@@ -1,0 +1,42 @@
+{
+  "skill_name": "cloud-native-runtime",
+  "dimensions": [
+    {
+      "name": "reference_routing",
+      "description": "Loads only relevant references and assets for the task surface.",
+      "score_0": "No reference routing or unrelated references dominate.",
+      "score_1": "Some relevant references, but missing key domain files.",
+      "score_2": "Relevant references selected with clear reason."
+    },
+    {
+      "name": "source_of_truth",
+      "description": "Traces active runtime, infrastructure, persistence, and deployment sources before acting.",
+      "score_0": "Assumes architecture from prompt or docs only.",
+      "score_1": "Partially traces code or config.",
+      "score_2": "End-to-end source-of-truth trace is explicit."
+    },
+    {
+      "name": "production_architecture",
+      "description": "Addresses security, tenancy, resilience, observability, cost, and rollback.",
+      "score_0": "Narrow happy-path implementation or review.",
+      "score_1": "Covers some operational concerns.",
+      "score_2": "Covers all material production concerns for the task."
+    },
+    {
+      "name": "validation_quality",
+      "description": "Defines repository-native tests and validation tied to changed behavior.",
+      "score_0": "No concrete validation or only generic tests.",
+      "score_1": "Validation exists but misses important risk paths.",
+      "score_2": "Validation covers happy path, failure, security, and runtime gates as applicable."
+    },
+    {
+      "name": "scope_control",
+      "description": "Avoids unrelated UI/docs/provider churn and does not invent fake production resources.",
+      "score_0": "Adds unrelated or unsafe work.",
+      "score_1": "Mostly scoped with minor drift.",
+      "score_2": "Tightly scoped and architecture-correct."
+    }
+  ],
+  "passing_score": 8,
+  "max_score": 10
+}

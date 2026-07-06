@@ -1,0 +1,7 @@
+interface:
+  display_name: "Cloud Native Runtime"
+  short_description: "Cloud-native backend, infra, async, observability, security, deployment, and readiness guidance."
+  default_prompt: "Use cloud-native runtime guidance to implement or review this backend, infrastructure, async, storage, observability, or deployment change."
+  brand_color: "#2563EB"
+policy:
+  allow_implicit_invocation: true

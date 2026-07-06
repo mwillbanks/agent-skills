@@ -1,0 +1,78 @@
+{
+  "skill_name": "cloud-native-runtime",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "In this TypeScript API service, implement a POST /uploads endpoint that creates a presigned object-storage upload URL, validates max file size and MIME type, stores an upload intent row, and emits enough logs for debugging production upload failures.",
+      "expected_output": "Implementation plan or code changes should route through API, upload/media, security, observability, and resilience guidance; validate inputs server-side; keep object storage private; use short-lived scoped signed URLs; add tests for success and invalid inputs; avoid UI-only work.",
+      "files": [],
+      "expectations": [
+        "Reads or applies references/api-standards.md, references/file-uploads-media.md, references/security-secrets.md, and references/observability.md.",
+        "Traces active API route, persistence, storage config, and auth boundary before editing.",
+        "Defines validation for MIME type, file size, ownership, signed URL scope, and error envelope.",
+        "Includes repository-native validation commands or tests.",
+        "Does not make buckets public or store secrets in plaintext."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Review a Pulumi diff that adds CloudFront in front of our media bucket and opens a new origin access path. Tell me whether this is ready to deploy to production.",
+      "expected_output": "Review should produce severity-ordered findings and a GO/NO GO verdict based on infrastructure, networking/cache, security, observability, and production readiness evidence.",
+      "files": [],
+      "expectations": [
+        "Reads or applies references/infrastructure.md, references/networking-caching.md, references/security-secrets.md, and references/production-readiness.md.",
+        "Checks public exposure, origin access, cache keys, TTLs, CORS, logging, IAM, and replacement/deletion risk.",
+        "Requires preview/plan evidence before deploy approval.",
+        "Does not approve production deploy solely because tests pass."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Move invoice PDF generation out of the checkout request path into a background worker. The user should see status, failures should retry safely, and support needs enough telemetry to debug stuck jobs.",
+      "expected_output": "Output should design or implement an async processing path with producer/consumer schema, idempotency, retries, DLQ or poison handling, status persistence, and observability.",
+      "files": [],
+      "expectations": [
+        "Reads or applies references/background-processing.md, references/resilience-idempotency.md, and references/observability.md.",
+        "Defines job schema, idempotency key, retry/backoff, dead-letter behavior, and completion/status model.",
+        "Preserves checkout request contract or explicitly changes it with tests.",
+        "Does not move work async without user-visible status or operational visibility."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "We have a nightly cron container that scans accounts and expires stale sessions. Replace it with a managed scheduler and make sure missed runs, overlaps, and partial failures are handled.",
+      "expected_output": "Output should select a scheduler/runtime pattern, define missed-run and overlap semantics, checkpointing, idempotency, observability, and validation for the scheduled job logic separate from trigger wiring.",
+      "files": [],
+      "expectations": [
+        "Reads or applies references/scheduling.md, references/background-processing.md, references/resilience-idempotency.md, and references/infrastructure.md.",
+        "Defines time zone, missed-run behavior, overlap lock, checkpoint, and rerun safety.",
+        "Keeps schedule source of truth in repository infrastructure or runtime config.",
+        "Does not rely on local process timers for production-critical recurring work unless repository evidence supports singleton behavior."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Do an architecture review of this branch that introduces a Lambda webhook handler, an SQS queue, and a worker that calls a third-party billing API. Focus on production readiness, secrets, idempotency, and observability.",
+      "expected_output": "Review should trace the full webhook-to-queue-to-worker path, identify security and resilience risks, check secrets and IAM, verify retry/idempotency behavior, and give production-readiness findings with severity.",
+      "files": [],
+      "expectations": [
+        "Reads or applies references/architecture.md, references/security-secrets.md, references/resilience-idempotency.md, references/observability.md, and references/production-readiness.md.",
+        "Checks webhook validation, queue schema, retry semantics, duplicate delivery, secret handling, IAM scope, and alerting.",
+        "Reports findings before summaries and avoids generic best-practice prose without code/config evidence.",
+        "Does not assume SQS/Lambda semantics without verifying configured behavior."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Compare whether we should keep our self-hosted image proxy or move to managed cloud services. Include replacement-cost categories and what evidence you need before recommending a path.",
+      "expected_output": "Output should use capability-first cloud equivalency, compare managed and self-hosted cost categories, list operational risks, require current provider pricing for numeric estimates, and avoid provider-specific conclusions without evidence.",
+      "files": [],
+      "expectations": [
+        "Reads or applies references/cost-cloud-equivalency.md, references/file-uploads-media.md, and assets/cloud-mapping-matrix.md.",
+        "Compares service charges, adjacent services, egress, observability, engineering operations, migration, lock-in, and risk.",
+        "States assumptions and required current pricing evidence.",
+        "Does not present static prices from memory as current."
+      ]
+    }
+  ]
+}

@@ -21,6 +21,7 @@ const requiredSkillDirs = [
   "agent-execution-mode",
   "github-pr-review",
   "code-discipline",
+  "cloud-native-runtime",
   "execution-alignment-gate",
   "skill-creator",
   "speckit-feature-orchestrator",

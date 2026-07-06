@@ -1,0 +1,86 @@
+[
+  {
+    "id": "positive-api-runtime",
+    "query": "Implement the POST /uploads API so it creates a presigned S3 URL, validates MIME type, and records the upload intent in Postgres.",
+    "should_trigger": true,
+    "category": "positive",
+    "rationale": "API, S3, upload, persistence, and security runtime work."
+  },
+  {
+    "id": "positive-pulumi-cloudfront",
+    "query": "Review this Pulumi diff that adds CloudFront in front of our media bucket before we deploy it to prod.",
+    "should_trigger": true,
+    "category": "positive",
+    "rationale": "Infrastructure, CDN, production deployment review."
+  },
+  {
+    "id": "positive-worker-async",
+    "query": "Move image resizing out of the request path into a background worker with retries and job status.",
+    "should_trigger": true,
+    "category": "positive",
+    "rationale": "Async processing, media, retries, runtime design."
+  },
+  {
+    "id": "positive-scheduler",
+    "query": "Replace this cron container with EventBridge Scheduler and make sure missed runs and overlap are handled.",
+    "should_trigger": true,
+    "category": "positive",
+    "rationale": "Scheduling and cloud runtime architecture."
+  },
+  {
+    "id": "positive-observability",
+    "query": "Add traces and alerts around the Lambda that sends billing webhooks so we can debug failures in production.",
+    "should_trigger": true,
+    "category": "positive",
+    "rationale": "Lambda, observability, production debugging."
+  },
+  {
+    "id": "negative-css-upload",
+    "query": "Make the upload progress bar CSS match the new design system colors and spacing.",
+    "should_trigger": false,
+    "category": "negative",
+    "rationale": "UI-only styling with upload vocabulary but no runtime behavior."
+  },
+  {
+    "id": "negative-readme",
+    "query": "Rewrite the README section that explains what serverless means for non-technical readers.",
+    "should_trigger": false,
+    "category": "negative",
+    "rationale": "Documentation/copywriting only."
+  },
+  {
+    "id": "negative-react-component",
+    "query": "Create a React component called ApiStatusBadge with green, yellow, and red states.",
+    "should_trigger": false,
+    "category": "negative",
+    "rationale": "Frontend component naming includes API but no backend/runtime work."
+  },
+  {
+    "id": "borderline-deployment-doc",
+    "query": "Update deployment docs after verifying how the Pulumi stack actually publishes the worker service.",
+    "should_trigger": true,
+    "category": "borderline",
+    "rationale": "Docs are involved, but task requires runtime and infrastructure verification."
+  },
+  {
+    "id": "borderline-dashboard",
+    "query": "Build a dashboard page for queue depth and worker failures using our existing metrics API.",
+    "should_trigger": true,
+    "category": "borderline",
+    "rationale": "Observability and runtime signals, not just UI styling."
+  },
+  {
+    "id": "ambiguous-cache-ui",
+    "query": "Improve cache behavior for the product images on the landing page.",
+    "should_trigger": true,
+    "category": "ambiguous",
+    "rationale": "Likely CDN/object cache behavior; inspect context before deciding if UI-only."
+  },
+  {
+    "id": "negative-blog-cloudfront",
+    "query": "Write a blog post comparing CloudFront and Cloudflare for startups.",
+    "should_trigger": false,
+    "category": "negative",
+    "rationale": "Content creation, not repository runtime work."
+  }
+]
